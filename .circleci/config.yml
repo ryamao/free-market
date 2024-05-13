@@ -5,7 +5,6 @@ jobs:
   phpunit:
     docker:
       - image: cimg/php:8.2-node
-      - image: circleci/mysql:8.0
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
@@ -23,6 +22,7 @@ jobs:
   dusk:
     docker:
       - image: cimg/php:8.2-browsers
+      - image: cimg/mysql:8.0
     steps:
       - checkout
       - php/install-packages
