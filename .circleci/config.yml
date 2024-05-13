@@ -53,5 +53,4 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - phpunit
-      - dusk
+      - test
