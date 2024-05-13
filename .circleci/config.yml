@@ -2,22 +2,7 @@ version: 2.1
 orbs:
   php: circleci/php@1
 jobs:
-  phpunit:
-    docker:
-      - image: cimg/php:8.2-node
-    steps:
-      - checkout
-      - php/install-packages
-      - run:
-          name: Copy .env
-          command: cp .env.ci .env
-      - run:
-          name: Generate key
-          command: php artisan key:generate
-      - run:
-          name: Run tests
-          command: php artisan test
-  dusk:
+  test:
     docker:
       - image: cimg/php:8.2-browsers
       - image: cimg/mysql:8.0
@@ -49,8 +34,15 @@ jobs:
           name: Migration
           command: php artisan migrate
       - run:
+          name: Run tests
+          command: php artisan test
+      - run:
           name: Update chrome driver
           command: php artisan dusk:chrome-driver --detect
+      - run:
+          name: Start chrome driver
+          command: ./vendor/laravel/dusk/bin/chromedriver-linux
+          background: true
       - run:
           name: Run Laravel server
           command: php artisan serve
