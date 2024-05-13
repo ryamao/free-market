@@ -2,12 +2,28 @@ version: 2.1
 orbs:
   php: circleci/php@1
 jobs:
-  test-php:
+  test:
     docker:
-      - image: cimg/php:8.2-node
+      - image: cimg/php:8.2-browsers
+      - image: cimg/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+          MYSQL_USER: ci-user
+          MYSQL_PASSWORD: password
     steps:
       - checkout
       - php/install-packages
+      - run:
+          name: Wait for MySQL
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
       - run:
           name: Copy .env
           command: cp .env.ci .env
@@ -15,9 +31,26 @@ jobs:
           name: Generate key
           command: php artisan key:generate
       - run:
+          name: Migration
+          command: php artisan migrate
+      - run:
           name: Run tests
           command: php artisan test
+      - run:
+          name: Update chrome driver
+          command: php artisan dusk:chrome-driver --detect
+      - run:
+          name: Start chrome driver
+          command: ./vendor/laravel/dusk/bin/chromedriver-linux
+          background: true
+      - run:
+          name: Run Laravel server
+          command: php artisan serve
+          background: true
+      - run:
+          name: Run dusk tests
+          command: php artisan dusk
 workflows:
   build-and-test:
     jobs:
-      - test-php
+      - test
