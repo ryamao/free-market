@@ -24,7 +24,7 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: testing
-          MYSQL_USER: root
+          MYSQL_USER: ci-user
           MYSQL_PASSWORD: password
     steps:
       - checkout
