@@ -2,9 +2,12 @@ version: 2.1
 orbs:
   php: circleci/php@1
 jobs:
-  test-php:
+  phpunit:
     docker:
       - image: cimg/php:8.2-node
+      - image: circleci/mysql:6.0
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - checkout
       - php/install-packages
@@ -17,7 +20,33 @@ jobs:
       - run:
           name: Run tests
           command: php artisan test
+  dusk:
+    docker:
+      - image: cimg/php:8.2-browsers
+    steps:
+      - checkout
+      - php/install-packages
+      - run:
+          name: Copy .env
+          command: cp .env.ci .env
+      - run:
+          name: Generate key
+          command: php artisan key:generate
+      - run:
+          name: Migration
+          command: php artisan migrate
+      - run:
+          name: Update chrome driver
+          command: php artisan dusk:chrome-driver --detect
+      - run:
+          name: Run Laravel server
+          command: php artisan serve
+          background: true
+      - run:
+          name: Run dusk tests
+          command: php artisan dusk
 workflows:
   build-and-test:
     jobs:
-      - test-php
+      - phpunit
+      - dusk
