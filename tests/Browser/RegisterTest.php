@@ -10,7 +10,7 @@ use Tests\DuskTestCase;
 class RegisterTest extends DuskTestCase
 {
     #[Test]
-    public function 会員登録ページを表示する(): void
+    public function 会員登録ページの要素が表示されている(): void
     {
         $this->browse(function (Browser $browser) {
             $browser->visit(new RegisterPage())
