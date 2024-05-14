@@ -16,12 +16,14 @@
     "plugins": [
         "vue",
         "simple-import-sort",
+        "unused-imports",
         "tailwindcss"
     ],
     "root": true,
     "rules": {
         "simple-import-sort/imports": "warn",
         "simple-import-sort/exports": "warn",
+        "unused-imports/no-unused-imports": "warn",
         "vue/multi-word-component-names": "off"
     },
     "settings": {
