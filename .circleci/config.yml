@@ -15,6 +15,12 @@ jobs:
       - checkout
       - php/install-packages
       - run:
+          name: Install node modules
+          command: npm ci
+      - run:
+          name: Build assets
+          command: npm run build
+      - run:
           name: Wait for MySQL
           command: |
             for i in `seq 1 10`;
