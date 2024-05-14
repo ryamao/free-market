@@ -1,0 +1,11 @@
+{
+    "*.{js,ts,vue}": [
+        "eslint --fix",
+        "prettier --write",
+        "eslint"
+    ],
+    "*.php": [
+        "./vendor/bin/pint",
+        "./vendor/bin/phpstan analyse --memory-limit=2G"
+    ]
+}
