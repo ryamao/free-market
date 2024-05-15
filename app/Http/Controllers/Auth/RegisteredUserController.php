@@ -34,6 +34,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect('/mypage/profile');
+        return redirect()->intended(route('profile.edit', absolute: false));
     }
 }

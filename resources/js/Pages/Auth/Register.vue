@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 
 import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -13,44 +13,50 @@ const form = useForm({
 })
 
 const submit = () => {
-  alert(JSON.stringify(form))
-  form.reset('password')
+  form.post(route('register'), {
+    onFinish: () => {
+      form.reset('password')
+    }
+  })
 }
 </script>
 
 <template>
   <GuestLayout>
-    <section class="mx-auto mt-16 max-w-lg">
-      <h2 class="text-center text-2xl font-bold">会員登録</h2>
+    <Head title="会員登録" />
+
+    <section class="mx-auto max-w-lg">
+      <h2 class="my-16 text-center text-2xl font-bold">会員登録</h2>
 
       <form novalidate @submit.prevent="submit">
-        <div class="mt-14">
-          <InputLabel for="email" value="メールアドレス" />
-          <TextInput
-            id="email"
-            v-model="form.email"
-            type="email"
-            class="mt-1 block w-full"
-            required
-            autocomplete="username"
-          />
-          <InputError class="mt-2" :message="form.errors.email" />
+        <div class="*:h-32">
+          <div>
+            <InputLabel for="email" value="メールアドレス" />
+            <TextInput
+              id="email"
+              v-model="form.email"
+              type="email"
+              class="mt-1 block w-full"
+              required
+              autocomplete="username"
+            />
+            <InputError class="mt-2" :message="form.errors.email" />
+          </div>
+          <div>
+            <InputLabel for="password" value="パスワード" />
+            <TextInput
+              id="password"
+              v-model="form.password"
+              type="password"
+              class="mt-1 block w-full"
+              required
+              autocomplete="new-password"
+            />
+            <InputError class="mt-2" :message="form.errors.password" />
+          </div>
         </div>
 
-        <div class="mt-12">
-          <InputLabel for="password" value="パスワード" />
-          <TextInput
-            id="password"
-            v-model="form.password"
-            type="password"
-            class="mt-1 block w-full"
-            required
-            autocomplete="new-password"
-          />
-          <InputError class="mt-2" :message="form.errors.password" />
-        </div>
-
-        <div class="mt-20">
+        <div class="mt-8">
           <PrimaryButton
             type="submit"
             class="w-full"
