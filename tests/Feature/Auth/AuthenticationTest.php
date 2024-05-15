@@ -27,7 +27,7 @@ class AuthenticationTest extends TestCase
     #[Test]
     public function ログインページが表示される(): void
     {
-        $response = $this->get('/login');
+        $response = $this->get(route('login'));
 
         $response->assertStatus(200);
     }
@@ -35,19 +35,19 @@ class AuthenticationTest extends TestCase
     #[Test]
     public function ログインページでユーザーが認証できる(): void
     {
-        $response = $this->from('/login')->post('/login', [
+        $response = $this->fromRoute('login')->post(route('login'), [
             'email' => $this->user->email,
             'password' => 'password',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('mypage', absolute: false));
+        $response->assertRedirectToRoute('dashboard');
     }
 
     #[Test]
     public function ログインページで項目が入力されていない場合は認証できない(): void
     {
-        $response = $this->from('/login')->post('/login', [
+        $response = $this->fromRoute('login')->post(route('login'), [
             'email' => '',
             'password' => '',
         ]);
@@ -62,7 +62,7 @@ class AuthenticationTest extends TestCase
     #[Test]
     public function ログインページでパスワードが間違っている場合は認証できない(): void
     {
-        $response = $this->from('/login')->post('/login', [
+        $response = $this->fromRoute('login')->post(route('login'), [
             'email' => $this->user->email,
             'password' => 'wrong-password',
         ]);
@@ -74,9 +74,9 @@ class AuthenticationTest extends TestCase
     #[Test]
     public function ログアウトできる(): void
     {
-        $response = $this->actingAs($this->user)->from('/')->post('/logout');
+        $response = $this->actingAs($this->user)->fromRoute('home')->post(route('logout'));
 
         $this->assertGuest();
-        $response->assertRedirect('/');
+        $response->assertRedirectToRoute('home');
     }
 }

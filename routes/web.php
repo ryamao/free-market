@@ -12,13 +12,11 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
-
-Route::get('/mypage', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('mypage');
+})->name('home');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/mypage', fn () => Inertia::render('Dashboard'))->name('dashboard');
+
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/mypage/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -35,7 +35,8 @@ class RegisterTest extends DuskTestCase
                 ->type('@email', 'test@example.com')
                 ->type('@password', 'password')
                 ->press('@register-button')
-                ->waitForLocation('/mypage/profile');
+                ->waitForLocation(route('profile.edit', absolute: false))
+                ->logout();
         });
     }
 
@@ -45,11 +46,11 @@ class RegisterTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $page = new RegisterPage();
             $browser->visit($page)
-                ->assertDontSee('メールアドレスを入力してください')
-                ->assertDontSee('パスワードを入力してください')
+                ->assertDontSee('Eメールは必須項目です。')
+                ->assertDontSee('パスワードは必須項目です。')
                 ->press('@register-button')
-                ->waitForText('メールアドレスを入力してください')
-                ->waitForText('パスワードを入力してください')
+                ->waitForText('Eメールは必須項目です。')
+                ->waitForText('パスワードは必須項目です。')
                 ->waitForLocation($page->url());
         });
     }
@@ -61,7 +62,7 @@ class RegisterTest extends DuskTestCase
             $page = new RegisterPage();
             $browser->visit($page)
                 ->click('@login-link')
-                ->waitForLocation('/login');
+                ->waitForLocation(route('login', absolute: false));
         });
     }
 }

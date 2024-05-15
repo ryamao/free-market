@@ -27,7 +27,7 @@ class RegistrationTest extends TestCase
     #[Test]
     public function 会員登録画面が表示される(): void
     {
-        $response = $this->get('/register');
+        $response = $this->get(route('register'));
 
         $response->assertStatus(200);
     }
@@ -35,13 +35,13 @@ class RegistrationTest extends TestCase
     #[Test]
     public function 新規ユーザーが登録できる(): void
     {
-        $response = $this->from('/register')->post('/register', [
+        $response = $this->fromRoute('register')->post(route('register'), [
             'email' => 'test@example.com',
             'password' => 'password',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect('/mypage/profile');
+        $response->assertRedirectToRoute('profile.edit');
     }
 
     /**
@@ -79,16 +79,16 @@ class RegistrationTest extends TestCase
     )]
     public function バリデーションエラーを返す($params, $messages): void
     {
-        $response = $this->from('/register')->post('/register', $params);
+        $response = $this->fromRoute('register')->post(route('register'), $params);
 
         $response->assertSessionHasErrors($messages);
-        $response->assertRedirect('/register');
+        $response->assertRedirectToRoute('register');
     }
 
     #[Test]
     public function メールアドレスがすでに登録されている(): void
     {
-        $response = $this->from('/register')->post('/register', [
+        $response = $this->fromRoute('register')->post(route('register'), [
             'email' => $this->user->email,
             'password' => 'password2',
         ]);
@@ -96,14 +96,14 @@ class RegistrationTest extends TestCase
         $response->assertSessionHasErrors([
             'email' => '指定のeメールは既に使用されています。',
         ]);
-        $response->assertRedirect('/register');
+        $response->assertRedirectToRoute('register');
     }
 
     #[Test]
     public function ログイン中に会員登録ページにアクセスするとマイページにリダイレクトされる(): void
     {
-        $response = $this->actingAs($this->user)->get('/register');
+        $response = $this->actingAs($this->user)->get(route('register'));
 
-        $response->assertRedirect('/mypage');
+        $response->assertRedirectToRoute('dashboard');
     }
 }
