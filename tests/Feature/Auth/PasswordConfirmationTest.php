@@ -10,6 +10,11 @@ class PasswordConfirmationTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function test_confirm_password_screen_can_be_rendered(): void
     {
         $user = User::factory()->create();

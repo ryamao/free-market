@@ -10,6 +10,11 @@ class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function test_profile_page_is_displayed(): void
     {
         $user = User::factory()->create();

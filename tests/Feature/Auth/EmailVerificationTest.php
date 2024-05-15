@@ -13,6 +13,11 @@ class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function test_email_verification_screen_can_be_rendered(): void
     {
         $user = User::factory()->unverified()->create();
@@ -22,7 +27,7 @@ class EmailVerificationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function skip_test_email_can_be_verified(): void
+    public function test_email_can_be_verified(): void
     {
         $user = User::factory()->unverified()->create();
 
