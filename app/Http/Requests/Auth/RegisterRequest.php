@@ -5,6 +5,10 @@ namespace App\Http\Requests\Auth;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property string $email
+ * @property string $password
+ */
 class RegisterRequest extends FormRequest
 {
     /**
@@ -25,26 +29,6 @@ class RegisterRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', 'min:8', 'max:255'],
-        ];
-    }
-
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'email.required' => 'メールアドレスを入力してください',
-            'email.string' => 'メールアドレスは文字列で入力してください',
-            'email.email' => 'メールアドレスの形式が間違っています',
-            'email.max' => 'メールアドレスは255文字以内で入力してください',
-            'email.unique' => '同じメールアドレスがすでに登録されています',
-            'password.required' => 'パスワードを入力してください',
-            'password.string' => 'パスワードは文字列で入力してください',
-            'password.min' => 'パスワードは8文字以上で入力してください',
-            'password.max' => 'パスワードは255文字以内で入力してください',
         ];
     }
 }

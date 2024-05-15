@@ -52,28 +52,28 @@ class RegistrationTest extends TestCase
     #[TestWith(
         [
             ['email' => '', 'password' => 'password'],
-            ['email' => 'メールアドレスを入力してください'],
+            ['email' => 'Eメールは必須項目です。'],
         ],
         'メールアドレスが未入力の場合'
     )]
     #[TestWith(
         [
             ['email' => 'invalid-email', 'password' => 'password'],
-            ['email' => 'メールアドレスの形式が間違っています'],
+            ['email' => 'Eメールは、有効なメールアドレス形式で指定してください。'],
         ],
         'メールアドレスが不正な形式の場合'
     )]
     #[TestWith(
         [
             ['email' => 'test@example.com', 'password' => ''],
-            ['password' => 'パスワードを入力してください'],
+            ['password' => 'パスワードは必須項目です。'],
         ],
         'パスワードが未入力の場合'
     )]
     #[TestWith(
         [
             ['email' => 'test@example.com', 'password' => 'passwor'],
-            ['password' => 'パスワードは8文字以上で入力してください'],
+            ['password' => 'パスワードの文字数は、8文字以上である必要があります。'],
         ],
         'パスワードが8文字未満の場合'
     )]
@@ -94,7 +94,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors([
-            'email' => '同じメールアドレスがすでに登録されています',
+            'email' => '指定のeメールは既に使用されています。',
         ]);
         $response->assertRedirect('/register');
     }
