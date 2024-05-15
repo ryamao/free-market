@@ -2,40 +2,52 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Browser\Pages\RegisterPage;
+use Tests\Browser\Pages\LoginPage;
 use Tests\DuskTestCase;
 
-class RegisterTest extends DuskTestCase
+class LoginTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        User::create([
+            'email' => 'test@example.com',
+            'password' => Hash::make('password'),
+        ]);
+    }
+
     #[Test]
-    public function 会員登録ページの要素が表示されている(): void
+    public function ログインページの要素が表示される(): void
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new RegisterPage())
-                ->assertSeeIn('@title', '会員登録')
+            $browser->visit(new LoginPage())
+                ->assertSeeIn('@title', 'ログイン')
                 ->assertSeeIn('@email-label', 'メールアドレス')
                 ->assertPresent('@email')
                 ->assertSeeIn('@password-label', 'パスワード')
                 ->assertPresent('@password')
-                ->assertSeeIn('@register-button', '登録する')
-                ->assertSeeIn('@login-link', 'ログインはこちら');
+                ->assertSeeIn('@login-button', 'ログインする')
+                ->assertSeeIn('@register-link', '会員登録はこちら');
         });
     }
 
     #[Test]
-    public function 会員登録ができる(): void
+    public function ログインページからログインする(): void
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new RegisterPage())
+            $browser->visit(new LoginPage())
                 ->type('@email', 'test@example.com')
                 ->type('@password', 'password')
-                ->press('@register-button')
-                ->waitForLocation(route('profile.edit', absolute: false))
+                ->press('@login-button')
+                ->waitForLocation(route('dashboard', absolute: false))
                 ->logout();
         });
     }
@@ -44,11 +56,11 @@ class RegisterTest extends DuskTestCase
     public function バリデーションエラー時にエラーメッセージが表示される(): void
     {
         $this->browse(function (Browser $browser) {
-            $page = new RegisterPage();
+            $page = new LoginPage();
             $browser->visit($page)
                 ->assertDontSee('Eメールは必須項目です。')
                 ->assertDontSee('パスワードは必須項目です。')
-                ->press('@register-button')
+                ->press('@login-button')
                 ->waitForText('Eメールは必須項目です。')
                 ->waitForText('パスワードは必須項目です。')
                 ->waitForLocation($page->url());
@@ -56,13 +68,12 @@ class RegisterTest extends DuskTestCase
     }
 
     #[Test]
-    public function ログインページに遷移できる(): void
+    public function 会員登録ページに遷移できる(): void
     {
         $this->browse(function (Browser $browser) {
-            $page = new RegisterPage();
-            $browser->visit($page)
-                ->click('@login-link')
-                ->waitForLocation(route('login', absolute: false));
+            $browser->visit(new LoginPage())
+                ->click('@register-link')
+                ->waitForLocation(route('register', absolute: false));
         });
     }
 }
