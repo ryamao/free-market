@@ -4,54 +4,77 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
     protected function setUp(): void
     {
-        $this->markTestSkipped();
+        parent::setUp();
+
+        $this->user = User::create([
+            'email' => 'test@example.com',
+            'password' => Hash::make('password'),
+        ]);
     }
 
-    public function test_login_screen_can_be_rendered(): void
+    #[Test]
+    public function ログインページが表示される(): void
     {
         $response = $this->get('/login');
 
         $response->assertStatus(200);
     }
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    #[Test]
+    public function ログインページでユーザーが認証できる(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
+        $response = $this->from('/login')->post('/login', [
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('mypage', absolute: false));
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password(): void
+    #[Test]
+    public function ログインページで項目が入力されていない場合は認証できない(): void
     {
-        $user = User::factory()->create();
+        $response = $this->from('/login')->post('/login', [
+            'email' => '',
+            'password' => '',
+        ]);
 
-        $this->post('/login', [
-            'email' => $user->email,
+        $this->assertGuest();
+        $response->assertSessionHasErrors([
+            'email' => 'Eメールは必須項目です。',
+            'password' => 'パスワードは必須項目です。',
+        ]);
+    }
+
+    #[Test]
+    public function ログインページでパスワードが間違っている場合は認証できない(): void
+    {
+        $response = $this->from('/login')->post('/login', [
+            'email' => $this->user->email,
             'password' => 'wrong-password',
         ]);
 
         $this->assertGuest();
+        $response->assertSessionHasErrors(['email' => '認証に失敗しました。']);
     }
 
-    public function test_users_can_logout(): void
+    #[Test]
+    public function ログアウトできる(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->post('/logout');
+        $response = $this->actingAs($this->user)->from('/')->post('/logout');
 
         $this->assertGuest();
         $response->assertRedirect('/');
