@@ -15,6 +15,12 @@ jobs:
       - checkout
       - php/install-packages
       - run:
+          name: Install node modules
+          command: npm ci
+      - run:
+          name: Build assets
+          command: npm run build
+      - run:
           name: Wait for MySQL
           command: |
             for i in `seq 1 10`;
@@ -25,7 +31,10 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
-          name: Copy .env
+          name: Remove .env.testing and .env.dusk.testing
+          command: rm -f .env.testing .env.dusk.testing
+      - run:
+          name: Copy .env.ci to .env
           command: cp .env.ci .env
       - run:
           name: Generate key
