@@ -22,9 +22,9 @@ const submit = () => {
 </script>
 
 <template>
-  <GuestLayout>
-    <Head title="会員登録" />
+  <Head title="会員登録" />
 
+  <GuestLayout>
     <section class="mx-auto max-w-lg">
       <h2 class="my-16 text-center text-2xl font-bold">会員登録</h2>
 
