@@ -7,7 +7,9 @@ import { Item, User } from '@/types'
 
 const page = usePage()
 
-const searchString = page.url.startsWith('/search?q=') ? page.url.split('=')[1] : ''
+const searchString = page.url.startsWith('/search?q=')
+  ? decodeURIComponent(page.url.split('=')[1])
+  : ''
 
 const user1: User = {
   id: 1,
@@ -45,7 +47,7 @@ const items: Item[] = Array.from({ length: 30 }, (_, i) => ({
       </ul>
     </nav>
 
-    <section class="p-12">
+    <div class="p-12">
       <ul class="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-16">
         <li v-for="item in items" :key="item.id" class="flex justify-center">
           <Link href="#">
@@ -53,6 +55,6 @@ const items: Item[] = Array.from({ length: 30 }, (_, i) => ({
           </Link>
         </li>
       </ul>
-    </section>
+    </div>
   </CommonLayout>
 </template>

@@ -62,5 +62,7 @@ function search() {
     </nav>
   </header>
 
-  <slot />
+  <main>
+    <slot />
+  </main>
 </template>

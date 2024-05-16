@@ -74,9 +74,9 @@ class AuthenticationTest extends TestCase
     #[Test]
     public function ログアウトできる(): void
     {
-        $response = $this->actingAs($this->user)->fromRoute('home')->post(route('logout'));
+        $response = $this->actingAs($this->user)->fromRoute('dashboard')->post(route('logout'));
 
         $this->assertGuest();
-        $response->assertRedirectToRoute('home');
+        $response->assertRedirectToRoute('latest-items');
     }
 }
