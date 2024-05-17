@@ -21,11 +21,20 @@ final class ItemSeeder extends Seeder
 
         $conditions = Condition::all();
         $items = Item::factory()
-            ->count(35)
+            ->count(123)
             ->recycle($users)
             ->recycle($conditions)
-            ->state(fn () => ['created_at' => fake()->dateTimeBetween('-1 month')])
+            ->state(fn () => [
+                'created_at' => fake()->dateTimeBetween('-1 month'),
+            ])
             ->create();
+        foreach ($items as $item) {
+            $name = 'Item'.$item->id;
+            $item->update([
+                'name' => $name,
+                'image_url' => 'https://via.placeholder.com/150?text='.urlencode($name),
+            ]);
+        }
 
         $categories = Category::all();
         foreach ($items as $item) {

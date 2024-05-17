@@ -75,7 +75,7 @@ final class IndexTest extends DuskTestCase
                     route('items.show', $items[9]?->id)
                 )
                 ->assertNotPresent('@item-list > li:nth-of-type(11) > a')
-                ->scrollTo('@item-list > li:nth-of-type(11)')
+                ->scrollIntoView('@item-list > li:last-of-type')
                 ->waitFor('@item-list > li:nth-of-type(11) > a')
                 ->assertAttribute(
                     '@item-list > li:nth-of-type(11) > a',

@@ -9,6 +9,7 @@ import CommonLayout from '@/Layouts/CommonLayout.vue'
 import { Item, Paginator } from '@/types'
 
 const props = defineProps<{
+  routeName: string
   items: Paginator<Item>
   searchString?: string
 }>()
@@ -16,7 +17,6 @@ const props = defineProps<{
 const allItems = ref<Item[]>(props.items.data)
 const currentPage = ref<number>(props.items.meta.current_page)
 const lastPage = ref<number>(props.items.meta.last_page)
-const totalItems = ref<number>(props.items.meta.total)
 const pageBottom = ref<HTMLElement | null>(null)
 
 useIntersectionObserver(pageBottom, ([{ isIntersecting }]) => {
@@ -24,7 +24,11 @@ useIntersectionObserver(pageBottom, ([{ isIntersecting }]) => {
     return
   }
 
-  axios.get(route('items.index', { page: currentPage.value + 1 })).then(({ data }) => {
+  const params = props.searchString
+    ? { q: props.searchString, page: currentPage.value + 1 }
+    : { page: currentPage.value + 1 }
+
+  axios.get(route(props.routeName, params)).then(({ data }) => {
     allItems.value = [...allItems.value, ...data.data]
     currentPage.value = data.meta.current_page
     lastPage.value = data.meta.last_page
@@ -39,15 +43,17 @@ useIntersectionObserver(pageBottom, ([{ isIntersecting }]) => {
     <nav class="border-b border-black px-24 pb-1 pt-8">
       <ul class="flex gap-16">
         <li>
-          <NavLink :href="route('items.index')" :active="$page.url === '/'">新着商品</NavLink>
+          <NavLink :href="route('items.index')" :active="routeName === 'items.index'">
+            新着商品
+          </NavLink>
         </li>
-        <li v-if="$page.url.startsWith('/search')">
+        <li v-if="routeName === 'items.search'">
           <NavLink :href="route('items.search', { q: searchString })" :active="true">
             検索結果
           </NavLink>
         </li>
         <li v-if="$page.props.auth.user">
-          <NavLink :href="route('items.mylist')" :active="$page.url === '/mylist'">
+          <NavLink :href="route('items.mylist')" :active="routeName === 'items.mylist'">
             マイリスト
           </NavLink>
         </li>
@@ -63,15 +69,15 @@ useIntersectionObserver(pageBottom, ([{ isIntersecting }]) => {
         </li>
 
         <template v-if="currentPage < lastPage">
-          <li ref="pageBottom" class="flex justify-center">
+          <li
+            v-for="i in Array.from({ length: 10 }).map((_, i) => i)"
+            :key="'dummy-key-' + i"
+            class="flex justify-center"
+          >
             <div class="size-32 animate-pulse bg-gray-200"></div>
           </li>
 
-          <li
-            v-for="i in Array.from({ length: totalItems - allItems.length - 1 }).map((_, i) => i)"
-            :key="i"
-            class="flex justify-center"
-          >
+          <li ref="pageBottom" class="flex justify-center">
             <div class="size-32 animate-pulse bg-gray-200"></div>
           </li>
         </template>

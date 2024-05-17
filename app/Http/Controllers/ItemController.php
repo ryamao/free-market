@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\GetLatestItems;
+use App\Actions\SearchItems;
 use App\Http\Resources\ItemResource;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -12,30 +13,44 @@ use Inertia\Inertia;
 
 final class ItemController extends Controller
 {
-    public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Inertia\Response
+    public function index(Request $request, GetLatestItems $action): \Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Inertia\Response
     {
-        $items = app(GetLatestItems::class)();
+        $items = $action();
 
         if ($request->wantsJson()) {
             return $items;
+        } else {
+            return Inertia::render('Items/Index', [
+                'routeName' => 'items.index',
+                'items' => $items,
+            ]);
         }
-
-        return Inertia::render('Items/Index', [
-            'items' => $items,
-        ]);
     }
 
-    public function search(): \Inertia\Response
+    public function search(Request $request, SearchItems $action): \Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Inertia\Response
     {
-        return Inertia::render('Items/Index', [
-            'items' => ItemResource::collection(new LengthAwarePaginator([], 0, 10)),
-            'searchString' => request()->input('q'),
-        ]);
+        $searchString = $request->input('q');
+        if (! is_string($searchString)) {
+            $searchString = '';
+        }
+
+        $items = $action($searchString);
+
+        if ($request->wantsJson()) {
+            return $items;
+        } else {
+            return Inertia::render('Items/Index', [
+                'routeName' => 'items.search',
+                'items' => $items,
+                'searchString' => $searchString,
+            ]);
+        }
     }
 
     public function mylist(): \Inertia\Response
     {
         return Inertia::render('Items/Index', [
+            'routeName' => 'items.mylist',
             'items' => ItemResource::collection(new LengthAwarePaginator([], 0, 10)),
         ]);
     }
