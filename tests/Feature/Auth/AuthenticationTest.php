@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
@@ -8,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class AuthenticationTest extends TestCase
+final class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -74,9 +76,9 @@ class AuthenticationTest extends TestCase
     #[Test]
     public function ログアウトできる(): void
     {
-        $response = $this->actingAs($this->user)->fromRoute('home')->post(route('logout'));
+        $response = $this->actingAs($this->user)->fromRoute('dashboard')->post(route('logout'));
 
         $this->assertGuest();
-        $response->assertRedirectToRoute('home');
+        $response->assertRedirectToRoute('items.index');
     }
 }

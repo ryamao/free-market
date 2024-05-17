@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Browser;
 
 use App\Models\User;
@@ -10,7 +12,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\Browser\Pages\LoginPage;
 use Tests\DuskTestCase;
 
-class LoginTest extends DuskTestCase
+final class LoginTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
@@ -47,7 +49,7 @@ class LoginTest extends DuskTestCase
                 ->type('@email', 'test@example.com')
                 ->type('@password', 'password')
                 ->press('@login-button')
-                ->waitForLocation(route('dashboard', absolute: false))
+                ->waitForRoute('dashboard')
                 ->logout();
         });
     }
@@ -73,7 +75,7 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit(new LoginPage())
                 ->click('@register-link')
-                ->waitForLocation(route('register', absolute: false));
+                ->waitForRoute('register');
         });
     }
 }
