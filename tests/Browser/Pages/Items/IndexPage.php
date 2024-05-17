@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Browser\Pages\Items;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page;
 
-class IndexPage extends Page
+final class IndexPage extends Page
 {
     /**
      * Get the URL for the page.
@@ -33,7 +35,6 @@ class IndexPage extends Page
         return [
             '@search' => 'header input[type="search"]',
             '@main-nav' => 'main nav ul',
-            '@item-list' => 'main ul',
         ];
     }
 }

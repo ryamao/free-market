@@ -14,7 +14,7 @@ const form = useForm({
 })
 
 function search() {
-  form.get(route('search-results'))
+  form.get(route('items.search'))
 }
 </script>
 

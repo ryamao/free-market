@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\DatabaseTruncation;
@@ -8,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\Browser\Pages\RegisterPage;
 use Tests\DuskTestCase;
 
-class RegisterTest extends DuskTestCase
+final class RegisterTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
@@ -35,7 +37,7 @@ class RegisterTest extends DuskTestCase
                 ->type('@email', 'test@example.com')
                 ->type('@password', 'password')
                 ->press('@register-button')
-                ->waitForLocation(route('profile.edit', absolute: false))
+                ->waitForRoute('profile.edit')
                 ->logout();
         });
     }
@@ -62,7 +64,7 @@ class RegisterTest extends DuskTestCase
             $page = new RegisterPage();
             $browser->visit($page)
                 ->click('@login-link')
-                ->waitForLocation(route('login', absolute: false));
+                ->waitForRoute('login');
         });
     }
 }

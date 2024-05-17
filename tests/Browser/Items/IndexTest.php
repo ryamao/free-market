@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Browser\Items;
 
 use App\Models\User;
+use Database\Seeders\TestDataSeeder;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Dusk\Browser;
@@ -10,7 +13,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\Browser\Pages\Items;
 use Tests\DuskTestCase;
 
-class IndexTest extends DuskTestCase
+final class IndexTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
@@ -27,11 +30,33 @@ class IndexTest extends DuskTestCase
     }
 
     #[Test]
-    public function 商品一覧ページにアクセスすると新着商品が表示される(): void
+    public function 商品一覧ページにアクセスすると新着商品ページが表示される(): void
     {
         $this->browse(function (Browser $browser) {
             $browser->visit(new Items\IndexPage())
+                ->assertTitleContains('商品一覧')
                 ->assertSeeIn('@main-nav', '新着商品');
+        });
+    }
+
+    #[Test]
+    public function 購入可能な商品が存在しない場合は新着商品が表示されない(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit(new Items\IndexPage())
+                ->assertNotPresent('@item-list > li');
+        });
+    }
+
+    #[Test]
+    public function 購入可能な商品が存在する場合は新着商品が表示される(): void
+    {
+        $this->seed(TestDataSeeder::class);
+
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs($this->user)
+                ->visit(new Items\IndexPage())
+                ->assertPresent('@item-list > li');
         });
     }
 
@@ -43,12 +68,12 @@ class IndexTest extends DuskTestCase
                 ->assertDontSeeIn('@main-nav', '検索結果')
                 ->type('@search', 'テスト')
                 ->keys('@search', '{enter}')
-                ->waitForRoute('search-results')
+                ->waitForRoute('items.search')
                 ->assertQueryStringHas('q', 'テスト')
                 ->assertInputValue('@search', 'テスト')
                 ->assertSeeIn('@main-nav', '検索結果')
                 ->clickLink('新着商品')
-                ->waitForRoute('latest-items')
+                ->waitForRoute('items.index')
                 ->assertDontSeeIn('@main-nav', '検索結果');
         });
     }
@@ -57,7 +82,8 @@ class IndexTest extends DuskTestCase
     public function ゲスト時はマイリストが表示されない(): void
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new Items\IndexPage())
+            $browser->logout()
+                ->visit(new Items\IndexPage())
                 ->assertDontSeeIn('@main-nav', 'マイリスト');
         });
     }
@@ -69,9 +95,9 @@ class IndexTest extends DuskTestCase
             $browser->loginAs($this->user)
                 ->visit(new Items\IndexPage())
                 ->clickLink('マイリスト')
-                ->waitForRoute('wish-list')
+                ->waitForRoute('items.mylist')
                 ->clickLink('新着商品')
-                ->waitForRoute('latest-items')
+                ->waitForRoute('items.index')
                 ->logout();
         });
     }
@@ -80,7 +106,8 @@ class IndexTest extends DuskTestCase
     public function ゲスト時に商品一覧ページからログインページへ遷移できる(): void
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new Items\IndexPage())
+            $browser->logout()
+                ->visit(new Items\IndexPage())
                 ->clickLink('ログイン')
                 ->waitForRoute('login');
         });
@@ -90,7 +117,8 @@ class IndexTest extends DuskTestCase
     public function ゲスト時に商品一覧ページから会員登録ページへ遷移できる(): void
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new Items\IndexPage())
+            $browser->logout()
+                ->visit(new Items\IndexPage())
                 ->clickLink('会員登録')
                 ->waitForRoute('register');
         });
@@ -103,7 +131,7 @@ class IndexTest extends DuskTestCase
             $browser->loginAs($this->user)
                 ->visit(new Items\IndexPage())
                 ->clickLink('ログアウト')
-                ->waitForRoute('latest-items');
+                ->waitForRoute('items.index');
         });
 
         $this->assertGuest();

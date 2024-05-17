@@ -20,11 +20,16 @@ final class ItemController extends Controller
 
     public function search(): \Inertia\Response
     {
-        return Inertia::render('Items/Index');
+        return Inertia::render('Items/Index', [
+            'items' => [],
+            'searchString' => request()->input('q'),
+        ]);
     }
 
     public function mylist(): \Inertia\Response
     {
-        return Inertia::render('Items/Index');
+        return Inertia::render('Items/Index', [
+            'items' => [],
+        ]);
     }
 }
