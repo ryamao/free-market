@@ -12,7 +12,8 @@ final class GetLatestItems
     public function __invoke(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $items = Item::with(['seller', 'condition', 'categories'])
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
+            ->orderBy('name')
             ->paginate(10);
 
         return ItemResource::collection($items);

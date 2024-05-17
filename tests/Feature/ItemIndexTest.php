@@ -20,7 +20,7 @@ final class ItemIndexTest extends TestCase
     {
         $this->expectsDatabaseQueryCount(1);
 
-        $response = $this->get(route('latest-items'));
+        $response = $this->get(route('items.index'));
 
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page
@@ -33,7 +33,7 @@ final class ItemIndexTest extends TestCase
                     ->where('per_page', 10)
                     ->where('current_page', 1)
                     ->where('last_page', 1)
-                    ->where('path', route('latest-items', absolute: true))
+                    ->where('path', route('items.index', absolute: true))
                     ->etc()
                 )
             )
@@ -44,13 +44,13 @@ final class ItemIndexTest extends TestCase
     public function データベースに商品がある場合は商品一覧ページに商品を表示する(): void
     {
         $this->seed(TestDataSeeder::class);
-        $items = Item::orderBy('created_at', 'desc')->get();
+        $items = Item::orderByDesc('created_at')->orderBy('name')->get();
         $count = $items->count();
 
         // items、sellers、conditions、categories、item_categoryの5つのテーブルからデータを取得する
         $this->expectsDatabaseQueryCount(5);
 
-        $response = $this->get(route('latest-items'));
+        $response = $this->get(route('items.index'));
 
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page
@@ -58,7 +58,11 @@ final class ItemIndexTest extends TestCase
             ->has('items', fn (AssertableInertia $page) => $page
                 ->has('data', 10)
                 ->has('data.0', fn (AssertableInertia $page) => $page
-                    ->where('id', $items->firstOrFail()->id)
+                    ->where('id', $items[0]?->id)
+                    ->etc()
+                )
+                ->has('data.9', fn (AssertableInertia $page) => $page
+                    ->where('id', $items[9]?->id)
                     ->etc()
                 )
                 ->has('links')
@@ -79,11 +83,11 @@ final class ItemIndexTest extends TestCase
     public function 商品一覧ページの2ページ目を表示する(): void
     {
         $this->seed(TestDataSeeder::class);
-        $items = Item::orderBy('created_at', 'desc')->get();
+        $items = Item::orderByDesc('created_at')->orderBy('name')->get();
 
         $this->expectsDatabaseQueryCount(5);
 
-        $response = $this->get(route('latest-items', ['page' => 2]));
+        $response = $this->get(route('items.index', ['page' => 2]));
 
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page
@@ -92,6 +96,10 @@ final class ItemIndexTest extends TestCase
                 ->has('data', 10)
                 ->has('data.0', fn (AssertableInertia $page) => $page
                     ->where('id', $items[10]?->id)
+                    ->etc()
+                )
+                ->has('data.9', fn (AssertableInertia $page) => $page
+                    ->where('id', $items[19]?->id)
                     ->etc()
                 )
                 ->has('links')
@@ -110,13 +118,13 @@ final class ItemIndexTest extends TestCase
     public function 商品一覧ページの最終ページを表示する(): void
     {
         $this->seed(TestDataSeeder::class);
-        $items = Item::orderBy('created_at', 'desc')->get();
+        $items = Item::orderByDesc('created_at')->orderBy('name')->get();
         $count = $items->count();
         $lastPage = (int) ceil($count / 10);
 
         $this->expectsDatabaseQueryCount(5);
 
-        $response = $this->get(route('latest-items', ['page' => $lastPage]));
+        $response = $this->get(route('items.index', ['page' => $lastPage]));
 
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page
@@ -125,6 +133,10 @@ final class ItemIndexTest extends TestCase
                 ->has('data', $count % 10)
                 ->has('data.0', fn (AssertableInertia $page) => $page
                     ->where('id', $items[$count - $count % 10]?->id)
+                    ->etc()
+                )
+                ->has('data.'.($count % 10 - 1), fn (AssertableInertia $page) => $page
+                    ->where('id', $items[$count - 1]?->id)
                     ->etc()
                 )
                 ->has('links')

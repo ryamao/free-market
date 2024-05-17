@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Browser\Items;
 
+use App\Models\Item;
 use App\Models\User;
 use Database\Seeders\TestDataSeeder;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
@@ -53,10 +54,34 @@ final class IndexTest extends DuskTestCase
     {
         $this->seed(TestDataSeeder::class);
 
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs($this->user)
+        $items = Item::orderByDesc('created_at')->orderBy('name')->get();
+
+        $this->browse(function (Browser $browser) use ($items) {
+            $browser->resize(768, 600)
                 ->visit(new Items\IndexPage())
-                ->assertPresent('@item-list > li');
+                ->assertAttribute(
+                    '@item-list > li:nth-of-type(1) > a',
+                    'href',
+                    route('items.show', $items[0]?->id)
+                )
+                ->assertAttribute(
+                    '@item-list > li:nth-of-type(2) > a',
+                    'href',
+                    route('items.show', $items[1]?->id)
+                )
+                ->assertAttribute(
+                    '@item-list > li:nth-of-type(10) > a',
+                    'href',
+                    route('items.show', $items[9]?->id)
+                )
+                ->assertNotPresent('@item-list > li:nth-of-type(11) > a')
+                ->scrollTo('@item-list > li:nth-of-type(11)')
+                ->waitFor('@item-list > li:nth-of-type(11) > a')
+                ->assertAttribute(
+                    '@item-list > li:nth-of-type(11) > a',
+                    'href',
+                    route('items.show', $items[10]?->id)
+                );
         });
     }
 

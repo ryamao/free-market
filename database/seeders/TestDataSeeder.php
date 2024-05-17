@@ -32,7 +32,8 @@ final class TestDataSeeder extends Seeder
             ->count(35)
             ->recycle($users)
             ->recycle($conditions)
-            ->create(['created_at' => fake()->dateTimeBetween('-1 month')]);
+            ->state(fn () => ['created_at' => fake()->dateTimeBetween('-1 month')])
+            ->create();
 
         $categories = Category::all();
         foreach ($items as $item) {

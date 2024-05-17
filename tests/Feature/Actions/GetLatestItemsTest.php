@@ -28,11 +28,12 @@ final class GetLatestItemsTest extends TestCase
     public function データベースに商品がある場合は商品のコレクションを返す(): void
     {
         $this->seed(TestDataSeeder::class);
-        $expected = Item::orderBy('created_at', 'desc')->limit(10)->get();
+        $expected = Item::orderByDesc('created_at')->orderBy('name')->get();
 
         $action = new GetLatestItems();
         $actual = $action();
 
-        $this->assertEquals($expected->pluck('id'), collect($actual)->pluck('id'));
+        $this->assertCount(10, $actual);
+        $this->assertEquals($expected->take(10)->pluck('id'), collect($actual)->pluck('id'));
     }
 }
