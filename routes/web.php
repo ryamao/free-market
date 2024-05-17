@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('Items/Index'))->name('latest-items');
-Route::get('/search', fn () => Inertia::render('Items/Index'))->name('search-results');
-Route::get('/mylist', fn () => Inertia::render('Items/Index'))->name('wish-list');
+Route::get('/', [ItemController::class, 'index'])->name('latest-items');
+Route::get('/search', [ItemController::class, 'search'])->name('search-results');
+Route::get('/mylist', [ItemController::class, 'mylist'])->name('wish-list');
 
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', fn () => Inertia::render('Dashboard'))->name('dashboard');
