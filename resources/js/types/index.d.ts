@@ -1,18 +1,17 @@
-export interface User {
+export interface Seller {
   id: number
   name: string
-  email: string
-  email_verified_at: string
 }
 
 export interface Item {
   id: number
-  user: User
-  condition: string
+  seller: Seller
   name: string
   price: number
   image_url: string
   description: string
+  categories: string[]
+  condition: string
 }
 
 export interface Paginator<T> {
