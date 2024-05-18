@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/mypage/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/mylist', [ItemController::class, 'mylist'])->name('items.mylist');
+    Route::post('/mylist/{item}', [FavoriteController::class, 'store'])->name('mylist.store');
 
     Route::get('/purchase/{item}', fn () => Inertia::render('Welcome'))->name('purchase.create');
 });

@@ -1,13 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+/**
+ * @property int $id
+ * @property string $email
+ * @property string $name
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Collection<\App\Models\Item> $items
+ * @property \Illuminate\Support\Collection<\App\Models\Favorite> $favorites
+ */
+final class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -43,5 +53,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Item> */
+    public function items(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Item::class, 'seller_id');
+    }
+
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Item> */
+    public function favorites(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Item::class, 'favorites');
     }
 }
