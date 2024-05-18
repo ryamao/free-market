@@ -165,6 +165,7 @@ final class ItemIndexTest extends TestCase
                 ->has('data.0', fn (AssertableInertia $page) => $page
                     ->where('id', $item->id)
                     ->where('favorite_count', 0)
+                    ->where('is_favorite', false)
                     ->etc()
                 )
                 ->etc()
@@ -173,12 +174,13 @@ final class ItemIndexTest extends TestCase
 
         $user->favorites()->attach($item);
 
-        $response = $this->get(route('items.index'));
+        $response = $this->actingAs($user)->get(route('items.index'));
         $response->assertInertia(fn (AssertableInertia $page) => $page
             ->has('items', fn (AssertableInertia $page) => $page
                 ->has('data.0', fn (AssertableInertia $page) => $page
                     ->where('id', $item->id)
                     ->where('favorite_count', 1)
+                    ->where('is_favorite', true)
                     ->etc()
                 )
                 ->etc()

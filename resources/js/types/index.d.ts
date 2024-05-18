@@ -12,6 +12,8 @@ export interface Item {
   description: string
   categories: string[]
   condition: string
+  favorite_count: number
+  is_favorite: boolean
 }
 
 export interface Paginator<T> {

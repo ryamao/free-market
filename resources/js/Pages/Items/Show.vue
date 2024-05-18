@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, router } from '@inertiajs/vue3'
+import axios from 'axios'
 
 import CommentIcon from '@/Components/CommentIcon.vue'
 import FavoriteIcon from '@/Components/FavoriteIcon.vue'
@@ -12,8 +13,18 @@ const props = defineProps<{
   }
 }>()
 
-function favorite() {
-  alert('お気に入りに追加しました')
+function addToFavorite() {
+  axios.post(route('mylist.store', { item: props.item.data })).then(() => {
+    router.reload({ only: ['item'] })
+  })
+}
+
+function toggleFavorite() {
+  if (props.item.data.is_favorite) {
+    // TODO お気に入りから削除
+  } else {
+    addToFavorite()
+  }
 }
 </script>
 
@@ -32,7 +43,7 @@ function favorite() {
             <h2 class="text-3xl font-bold">{{ item.data.name }}</h2>
             <p class="my-4 text-2xl">¥{{ item.data.price.toLocaleString() }}</p>
             <div class="mx-2 my-4 flex gap-x-8">
-              <form @submit.prevent="favorite">
+              <form @submit.prevent="toggleFavorite">
                 <button
                   type="submit"
                   class="flex w-fit flex-col items-center"
@@ -43,8 +54,9 @@ function favorite() {
                   <FavoriteIcon
                     class="size-6"
                     :class="{ 'hover:text-gray-500': $page.props.auth.user === null }"
+                    :is-favorite="item.data.is_favorite"
                   />
-                  <span class="text-xs" dusk="favorite-count">0</span>
+                  <span class="text-xs" dusk="favorite-count">{{ item.data.favorite_count }}</span>
                 </button>
               </form>
               <Link
@@ -85,7 +97,7 @@ function favorite() {
               <li v-for="category in props.item.data.categories" :key="category">
                 <Link
                   :href="route('items.search', { q: 'category:' + category })"
-                  class="rounded-full bg-gray-200 px-4 py-0.5 text-sm hover:bg-gray-300"
+                  class="rounded-full bg-gray-200 px-4 py-0.5 text-sm transition duration-150 ease-in-out hover:bg-gray-300"
                 >
                   {{ category }}
                 </Link>
@@ -95,7 +107,7 @@ function favorite() {
             <div>
               <Link
                 :href="route('items.search', { q: 'condition:' + props.item.data.condition })"
-                class="rounded-full bg-gray-200 px-4 py-0.5 text-sm hover:bg-gray-300"
+                class="rounded-full bg-gray-200 px-4 py-0.5 text-sm transition duration-150 ease-in-out hover:bg-gray-300"
               >
                 {{ props.item.data.condition }}
               </Link>

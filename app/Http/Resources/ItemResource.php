@@ -29,6 +29,7 @@ final class ItemResource extends JsonResource
             'condition' => $this->condition->name,
             'categories' => $this->categories->pluck('name'),
             'favorite_count' => $this->watchers->count(),
+            'is_favorite' => $request->user() ? $this->watchers->contains($request->user()) : false,
             'created_at' => $this->created_at,
         ];
     }

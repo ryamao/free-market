@@ -26,7 +26,7 @@ const starPoints = Array.from({ length: 5 })
     :fill="isFavorite ? 'currentColor' : 'none'"
     stroke="currentColor"
     class="text-gray-500 transition duration-150 ease-in-out hover:text-gray-400 focus:text-gray-400"
-    :class="{ 'text-yellow-500': isFavorite }"
+    :class="{ 'text-yellow-400 hover:text-yellow-500 focus:text-yellow-500': isFavorite }"
   >
     <polygon stroke-width="15" stroke-linejoin="round" :points="starPoints" />
   </svg>
