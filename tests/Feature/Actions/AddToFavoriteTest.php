@@ -32,6 +32,9 @@ final class AddToFavoriteTest extends TestCase
             'user_id' => $user->id,
             'item_id' => $item->id,
         ]);
+
+        $this->assertSame(1, $user->favorites()->count());
+        $this->assertSame(1, $item->watchers()->count());
     }
 
     #[Test]
