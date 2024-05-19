@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class FavoriteStoreTest extends TestCase
+final class FavoritesStoreTest extends TestCase
 {
     use RefreshDatabase;
 

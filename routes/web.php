@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/mylist', [ItemController::class, 'mylist'])->name('items.mylist');
     Route::post('/mylist/{item}', [FavoriteController::class, 'store'])->name('mylist.store');
+    Route::delete('/mylist/{item}', [FavoriteController::class, 'destroy'])->name('mylist.destroy');
 
     Route::get('/purchase/{item}', fn () => Inertia::render('Welcome'))->name('purchase.create');
 });

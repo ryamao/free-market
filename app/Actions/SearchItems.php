@@ -11,7 +11,7 @@ final class SearchItems
 {
     public function __invoke(?string $searchString): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $builder = Item::with(['seller', 'condition', 'categories']);
+        $builder = Item::with(['seller', 'condition', 'categories', 'watchers']);
 
         $parseResult = self::parseSearchString($searchString);
         foreach ($parseResult['keywords'] as $keyword) {

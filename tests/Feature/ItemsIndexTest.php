@@ -12,7 +12,7 @@ use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class ItemIndexTest extends TestCase
+final class ItemsIndexTest extends TestCase
 {
     use RefreshDatabase;
 
