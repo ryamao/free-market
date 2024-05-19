@@ -53,7 +53,7 @@ useIntersectionObserver(pageBottom, ([{ isIntersecting }]) => {
           </NavLink>
         </li>
         <li v-if="$page.props.auth.user">
-          <NavLink :href="route('items.mylist')" :active="routeName === 'items.mylist'">
+          <NavLink :href="route('mylist.index')" :active="routeName === 'mylist.index'">
             マイリスト
           </NavLink>
         </li>

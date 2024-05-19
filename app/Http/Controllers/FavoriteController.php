@@ -5,11 +5,26 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\AddToFavorites;
+use App\Actions\GetFavorites;
 use App\Actions\RemoveFromFavorites;
 use App\Models\Item;
+use Inertia\Inertia;
 
 final class FavoriteController extends Controller
 {
+    public function index(GetFavorites $action): \Inertia\Response
+    {
+        $user = auth()->user();
+        assert($user !== null);
+
+        $items = $action($user);
+
+        return Inertia::render('Items/Index', [
+            'routeName' => 'mylist.index',
+            'items' => $items,
+        ]);
+    }
+
     public function store(Item $item, AddToFavorites $action): \Illuminate\Http\Response
     {
         $user = auth()->user();

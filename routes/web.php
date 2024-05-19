@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/mypage/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/mylist', [ItemController::class, 'mylist'])->name('items.mylist');
+    Route::get('/mylist', [FavoriteController::class, 'index'])->name('mylist.index');
     Route::post('/mylist/{item}', [FavoriteController::class, 'store'])->name('mylist.store');
     Route::delete('/mylist/{item}', [FavoriteController::class, 'destroy'])->name('mylist.destroy');
 
