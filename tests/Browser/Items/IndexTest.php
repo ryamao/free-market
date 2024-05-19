@@ -116,11 +116,21 @@ final class IndexTest extends DuskTestCase
     #[Test]
     public function ログイン中はマイリストを表示できる(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->seed(TestDataSeeder::class);
+
+        $item = Item::firstOrFail();
+        $this->user->favorites()->attach($item);
+
+        $this->browse(function (Browser $browser) use ($item) {
             $browser->loginAs($this->user)
                 ->visit(new Items\IndexPage())
                 ->clickLink('マイリスト')
-                ->waitForRoute('items.mylist')
+                ->waitForRoute('mylist.index')
+                ->assertAttribute(
+                    '@item-list > li:nth-of-type(1) > a',
+                    'href',
+                    route('items.show', $item)
+                )
                 ->clickLink('新着商品')
                 ->waitForRoute('items.index')
                 ->logout();
