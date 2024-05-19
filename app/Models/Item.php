@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \App\Models\User $seller
  * @property \App\Models\Condition $condition
  * @property \Illuminate\Database\Eloquent\Collection<\App\Models\Category> $categories
+ * @property \Illuminate\Database\Eloquent\Collection<\App\Models\User> $watchers
  */
 final class Item extends Model
 {
@@ -42,5 +43,11 @@ final class Item extends Model
     public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'item_category')->using(ItemCategory::class);
+    }
+
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\User> */
+    public function watchers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorites');
     }
 }

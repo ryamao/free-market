@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Item;
+use App\Models\User;
 use Database\Seeders\TestDataSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class ItemIndexTest extends TestCase
+final class ItemsIndexTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -47,8 +48,9 @@ final class ItemIndexTest extends TestCase
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
         $count = $items->count();
 
-        // items、sellers、conditions、categories、item_categoryの5つのテーブルからデータを取得する
-        $this->expectsDatabaseQueryCount(5);
+        // 6つのテーブルからデータを取得する
+        // items, sellers, conditions, categories, item_category, favorites
+        $this->expectsDatabaseQueryCount(6);
 
         $response = $this->get(route('items.index'));
 
@@ -85,7 +87,7 @@ final class ItemIndexTest extends TestCase
         $this->seed(TestDataSeeder::class);
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
 
-        $this->expectsDatabaseQueryCount(5);
+        $this->expectsDatabaseQueryCount(6);
 
         $response = $this->get(route('items.index', ['page' => 2]));
 
@@ -122,7 +124,7 @@ final class ItemIndexTest extends TestCase
         $count = $items->count();
         $lastPage = (int) ceil($count / 10);
 
-        $this->expectsDatabaseQueryCount(5);
+        $this->expectsDatabaseQueryCount(6);
 
         $response = $this->get(route('items.index', ['page' => $lastPage]));
 
@@ -147,6 +149,41 @@ final class ItemIndexTest extends TestCase
                     ->where('current_page', $lastPage)
                     ->etc()
                 )
+            )
+        );
+    }
+
+    #[Test]
+    public function お気に入り登録数がレスポンスに含まれている(): void
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create();
+
+        $response = $this->get(route('items.index'));
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('items', fn (AssertableInertia $page) => $page
+                ->has('data.0', fn (AssertableInertia $page) => $page
+                    ->where('id', $item->id)
+                    ->where('favorite_count', 0)
+                    ->where('is_favorite', false)
+                    ->etc()
+                )
+                ->etc()
+            )
+        );
+
+        $user->favorites()->attach($item);
+
+        $response = $this->actingAs($user)->get(route('items.index'));
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('items', fn (AssertableInertia $page) => $page
+                ->has('data.0', fn (AssertableInertia $page) => $page
+                    ->where('id', $item->id)
+                    ->where('favorite_count', 1)
+                    ->where('is_favorite', true)
+                    ->etc()
+                )
+                ->etc()
             )
         );
     }

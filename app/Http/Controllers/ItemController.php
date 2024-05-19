@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Actions\GetLatestItems;
 use App\Actions\SearchItems;
 use App\Http\Resources\ItemResource;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Inertia\Inertia;
@@ -52,6 +53,13 @@ final class ItemController extends Controller
         return Inertia::render('Items/Index', [
             'routeName' => 'items.mylist',
             'items' => ItemResource::collection(new LengthAwarePaginator([], 0, 10)),
+        ]);
+    }
+
+    public function show(Item $item): \Inertia\Response
+    {
+        return Inertia::render('Items/Show', [
+            'item' => ItemResource::make($item),
         ]);
     }
 }
