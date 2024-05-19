@@ -69,7 +69,7 @@ final class ShowTest extends DuskTestCase
         });
     }
 
-    // #[Test]
+    #[Test]
     public function お気に入り登録ができる(): void
     {
         $this->browse(function ($browser) {

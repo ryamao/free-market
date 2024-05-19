@@ -13,17 +13,23 @@ const props = defineProps<{
   }
 }>()
 
-function addToFavorite() {
+function addToFavorites() {
   axios.post(route('mylist.store', { item: props.item.data })).then(() => {
+    router.reload({ only: ['item'] })
+  })
+}
+
+function removeFromFavorites() {
+  axios.delete(route('mylist.destroy', { item: props.item.data })).then(() => {
     router.reload({ only: ['item'] })
   })
 }
 
 function toggleFavorite() {
   if (props.item.data.is_favorite) {
-    // TODO お気に入りから削除
+    removeFromFavorites()
   } else {
-    addToFavorite()
+    addToFavorites()
   }
 }
 </script>
