@@ -4,16 +4,25 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Actions;
 
-use App\Actions\AddToFavorite;
+use App\Actions\AddToFavorites;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class AddToFavoriteTest extends TestCase
+final class AddToFavoritesTest extends TestCase
 {
     use RefreshDatabase;
+
+    private AddToFavorites $action;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->action = new AddToFavorites();
+    }
 
     #[Test]
     public function お気に入りに追加できる(): void
@@ -26,7 +35,7 @@ final class AddToFavoriteTest extends TestCase
             'item_id' => $item->id,
         ]);
 
-        $this->assertTrue((new AddToFavorite())($user, $item));
+        $this->assertTrue(($this->action)($user, $item));
 
         $this->assertDatabaseHas('favorites', [
             'user_id' => $user->id,
@@ -50,7 +59,7 @@ final class AddToFavoriteTest extends TestCase
             'item_id' => $item->id,
         ]);
 
-        $this->assertFalse((new AddToFavorite())($user, $item));
+        $this->assertFalse(($this->action)($user, $item));
 
         $this->assertDatabaseCount('favorites', 1);
     }

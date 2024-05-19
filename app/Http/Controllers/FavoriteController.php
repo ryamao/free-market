@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\AddToFavorite;
+use App\Actions\AddToFavorites;
 use App\Models\Item;
 
 final class FavoriteController extends Controller
 {
-    public function store(Item $item, AddToFavorite $action): \Illuminate\Http\Response
+    public function store(Item $item, AddToFavorites $action): \Illuminate\Http\Response
     {
         $user = auth()->user();
 

@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Models\Favorite;
 use App\Models\Item;
 use App\Models\User;
 
-final class AddToFavorite
+final class AddToFavorites
 {
     public function __invoke(User $user, Item $item): bool
     {
-        $exists = Favorite::where('user_id', $user->id)
-            ->where('item_id', $item->id)
-            ->exists();
-
-        if ($exists) {
+        if ($user->favorites->contains($item)) {
             return false;
         }
 
