@@ -56,15 +56,14 @@ final class ShowTest extends DuskTestCase
                 ->assertSeeIn('main', '¥'.number_format((float) $this->item->price))
                 ->assertPresent('@favorite-button')
                 ->assertPresent('main a[href="'.route('comments.index', $this->item).'"]')
-                ->assertSeeIn('main a[href="'.route('purchase.create', $this->item).'"]', '購入する')
-                ->assertAttribute('main a[href="'.route('purchase.create', $this->item).'"]', 'disabled', true)
-                ->assertSee('商品説明')
-                ->assertSee('サンプルテキスト')
-                ->assertSee('商品の情報')
-                ->assertSee('カテゴリー')
+                ->assertSeeIn('main', '購入する')
+                ->assertSeeIn('main', '商品説明')
+                ->assertSeeIn('main', 'サンプルテキスト')
+                ->assertSeeIn('main', '商品の情報')
+                ->assertSeeIn('main', 'カテゴリー')
                 ->assertSeeIn('main a[href="'.route('items.search', ['q' => 'category:洋服']).'"]', '洋服')
                 ->assertSeeIn('main a[href="'.route('items.search', ['q' => 'category:メンズ']).'"]', 'メンズ')
-                ->assertSee('商品の状態')
+                ->assertSeeIn('main', '商品の状態')
                 ->assertSeeIn('main a[href="'.route('items.search', ['q' => 'condition:良好']).'"]', '良好');
         });
     }

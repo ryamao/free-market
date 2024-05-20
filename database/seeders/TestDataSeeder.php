@@ -40,5 +40,14 @@ final class TestDataSeeder extends Seeder
             $item->categories()->attach($categories->random());
             $item->categories()->attach($categories->random());
         }
+
+        foreach (Item::all() as $item) {
+            foreach (range(1, random_int(0, 10)) as $i) {
+                $item->comments()->create([
+                    'user_id' => $users->random()->id,
+                    'content' => fake()->paragraph(random_int(1, 3)),
+                ]);
+            }
+        }
     }
 }
