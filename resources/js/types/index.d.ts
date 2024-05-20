@@ -1,11 +1,12 @@
-export interface Seller {
+export interface UserData {
   id: number
   name: string
+  image_url: string
 }
 
 export interface Item {
   id: number
-  seller: Seller
+  seller: UserData
   name: string
   price: number
   image_url: string
@@ -14,6 +15,15 @@ export interface Item {
   condition: string
   favorite_count: number
   is_favorite: boolean
+  comment_count: number
+  created_at: string
+}
+
+export interface Comment {
+  id: number
+  user: UserData
+  content: string
+  created_at: string
 }
 
 export interface Paginator<T> {

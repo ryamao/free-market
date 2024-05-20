@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3'
-import axios from 'axios'
 
 import CommentIcon from '@/Components/CommentIcon.vue'
 import FavoriteIcon from '@/Components/FavoriteIcon.vue'
+import { toggleFavorite } from '@/functions'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
 import { Item } from '@/types'
 
@@ -13,24 +13,10 @@ const props = defineProps<{
   }
 }>()
 
-function addToFavorites() {
-  axios.post(route('mylist.store', { item: props.item.data })).then(() => {
+function onToggleFavorite() {
+  toggleFavorite(props.item.data).then(() => {
     router.reload({ only: ['item'] })
   })
-}
-
-function removeFromFavorites() {
-  axios.delete(route('mylist.destroy', { item: props.item.data })).then(() => {
-    router.reload({ only: ['item'] })
-  })
-}
-
-function toggleFavorite() {
-  if (props.item.data.is_favorite) {
-    removeFromFavorites()
-  } else {
-    addToFavorites()
-  }
 }
 </script>
 
@@ -44,12 +30,12 @@ function toggleFavorite() {
           <img :src="item.data.image_url" :alt="item.data.name" class="w-full object-contain" />
         </div>
 
-        <div class="space-y-8">
+        <div class="space-y-10">
           <section>
             <h2 class="text-3xl font-bold">{{ item.data.name }}</h2>
             <p class="my-4 text-2xl">¥{{ item.data.price.toLocaleString() }}</p>
             <div class="mx-2 my-4 flex gap-x-8">
-              <form @submit.prevent="toggleFavorite">
+              <form @submit.prevent="onToggleFavorite">
                 <button
                   type="submit"
                   class="flex w-fit flex-col items-center"
@@ -75,24 +61,28 @@ function toggleFavorite() {
             </div>
             <div class="my-4">
               <Link
+                v-if="$page.props.auth.user !== null"
                 :href="route('purchase.create', { item: item.data })"
-                class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-emerald-600 px-4 py-0.5 text-lg font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out"
-                :class="{
-                  'cursor-not-allowed bg-gray-300': $page.props.auth.user === null,
-                  'hover:bg-emerald-700 focus:bg-emerald-700 active:bg-emerald-800':
-                    $page.props.auth.user !== null
-                }"
-                :disabled="$page.props.auth.user === null"
+                class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-emerald-600 px-4 py-0.5 text-lg font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-emerald-700 focus:bg-emerald-700 active:bg-emerald-800"
               >
                 購入する
               </Link>
+              <span
+                v-else
+                class="inline-flex w-full cursor-not-allowed items-center justify-center rounded-md border border-transparent bg-gray-300 px-4 py-0.5 text-lg font-semibold uppercase tracking-widest text-white"
+              >
+                購入する
+              </span>
             </div>
           </section>
 
           <section>
             <h3 class="mb-2 text-xl font-bold">商品説明</h3>
-            <p v-for="(line, index) in item.data.description.split('\n')" :key="index">
-              {{ line }}
+            <p class="break-words">
+              <template v-for="(line, index) in item.data.description.split(/\n/)" :key="index">
+                <span>{{ line }}</span>
+                <br />
+              </template>
             </p>
           </section>
 
