@@ -1,7 +1,7 @@
 export interface UserData {
   id: number
-  name: string
-  image_url: string
+  name: ?string
+  image_url: ?string
 }
 
 export interface Item {

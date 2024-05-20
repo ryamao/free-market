@@ -29,7 +29,6 @@ final class UserFactory extends Factory
 
         return [
             'name' => $name,
-            'image_url' => 'https://via.placeholder.com/150?text='.urlencode($name[0]),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => self::$password ??= Hash::make('password'),
