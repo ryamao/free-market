@@ -30,6 +30,7 @@ final class ItemResource extends JsonResource
             'categories' => $this->categories->pluck('name'),
             'favorite_count' => $this->watchers->count(),
             'is_favorite' => $request->user() ? $this->watchers->contains($request->user()) : false,
+            'comment_count' => $this->comments->count(),
             'created_at' => $this->created_at,
         ];
     }

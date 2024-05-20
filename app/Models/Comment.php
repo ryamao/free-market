@@ -20,7 +20,7 @@ final class Comment extends Model
     use HasFactory;
 
     /** @var list<string> */
-    protected $fillable = ['content'];
+    protected $fillable = ['user_id', 'item_id', 'content'];
 
     /** @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Item, self> */
     public function item(): \Illuminate\Database\Eloquent\Relations\BelongsTo

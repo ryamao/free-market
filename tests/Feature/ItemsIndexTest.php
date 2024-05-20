@@ -48,9 +48,9 @@ final class ItemsIndexTest extends TestCase
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
         $count = $items->count();
 
-        // 6つのテーブルからデータを取得する
-        // items, sellers, conditions, categories, item_category, favorites
-        $this->expectsDatabaseQueryCount(6);
+        // 7つのテーブルからデータを取得する
+        // items, sellers, conditions, categories, item_category, favorites, comments
+        $this->expectsDatabaseQueryCount(7);
 
         $response = $this->get(route('items.index'));
 
@@ -87,7 +87,7 @@ final class ItemsIndexTest extends TestCase
         $this->seed(TestDataSeeder::class);
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
 
-        $this->expectsDatabaseQueryCount(6);
+        $this->expectsDatabaseQueryCount(7);
 
         $response = $this->get(route('items.index', ['page' => 2]));
 
@@ -124,7 +124,7 @@ final class ItemsIndexTest extends TestCase
         $count = $items->count();
         $lastPage = (int) ceil($count / 10);
 
-        $this->expectsDatabaseQueryCount(6);
+        $this->expectsDatabaseQueryCount(7);
 
         $response = $this->get(route('items.index', ['page' => $lastPage]));
 

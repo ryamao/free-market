@@ -11,13 +11,14 @@ final class SearchItems
 {
     public function __invoke(?string $searchString): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $builder = Item::with(['seller', 'condition', 'categories', 'watchers']);
+        $builder = Item::with(['seller', 'condition', 'categories', 'watchers', 'comments']);
 
         $parseResult = self::parseSearchString($searchString);
         foreach ($parseResult['keywords'] as $keyword) {
-            $builder
+            $builder->where(fn ($query) => $query
                 ->where('name', 'like', "%{$keyword}%")
-                ->orWhere('description', 'like', "%{$keyword}%");
+                ->orWhere('description', 'like', "%{$keyword}%")
+            );
         }
         foreach ($parseResult['conditions'] as $condition) {
             $builder->whereHas('condition', fn ($query) => $query->where('name', $condition));
