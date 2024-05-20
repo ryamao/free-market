@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \App\Models\Condition $condition
  * @property \Illuminate\Database\Eloquent\Collection<\App\Models\Category> $categories
  * @property \Illuminate\Database\Eloquent\Collection<\App\Models\User> $watchers
+ * @property \Illuminate\Database\Eloquent\Collection<\App\Models\Comment> $comments
  */
 final class Item extends Model
 {
@@ -49,5 +50,11 @@ final class Item extends Model
     public function watchers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorites');
+    }
+
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Comment> */
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

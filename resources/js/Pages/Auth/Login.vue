@@ -61,7 +61,7 @@ const submit = () => {
         <div class="mt-8">
           <PrimaryButton
             type="submit"
-            class="w-full"
+            class="w-full py-1.5"
             :class="{ 'opacity-25': form.processing }"
             :disabled="form.processing"
           >

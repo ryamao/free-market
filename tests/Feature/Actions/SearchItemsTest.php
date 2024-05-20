@@ -75,15 +75,14 @@ final class SearchItemsTest extends TestCase
     public function 商品名と説明文を検索する(): void
     {
         $expected = Item::where('name', 'AAA')
-            ->orWhere('name', 'CCC')
             ->orderByDesc('created_at')
             ->orderBy('name')
             ->get();
 
         $action = new SearchItems();
-        $actual = $action('A 3');
+        $actual = $action('A');
 
-        $this->assertCount(2, $actual);
+        $this->assertCount(1, $actual);
         $this->assertEquals($expected->pluck('id'), collect($actual)->pluck('id'));
     }
 

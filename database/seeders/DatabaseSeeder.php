@@ -20,6 +20,7 @@ final class DatabaseSeeder extends Seeder
             ConditionSeeder::class,
             CategorySeeder::class,
             ItemSeeder::class,
+            CommentSeeder::class,
         ]);
     }
 }

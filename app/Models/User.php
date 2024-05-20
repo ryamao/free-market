@@ -11,7 +11,8 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @property int $id
  * @property string $email
- * @property string $name
+ * @property string|null $name
+ * @property string|null $image_url
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Collection<\App\Models\Item> $items

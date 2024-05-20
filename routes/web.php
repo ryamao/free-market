@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
@@ -12,7 +13,7 @@ Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/search', [ItemController::class, 'search'])->name('items.search');
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
 
-Route::get('/comments/{item}', fn () => Inertia::render('Welcome'))->name('comments.index');
+Route::get('/comments/{item}', [CommentController::class, 'index'])->name('comments.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', fn () => Inertia::render('Dashboard'))->name('dashboard');
@@ -24,6 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/mylist', [FavoriteController::class, 'index'])->name('mylist.index');
     Route::post('/mylist/{item}', [FavoriteController::class, 'store'])->name('mylist.store');
     Route::delete('/mylist/{item}', [FavoriteController::class, 'destroy'])->name('mylist.destroy');
+
+    Route::post('/comments/{item}', [CommentController::class, 'store'])->name('comments.store');
 
     Route::get('/purchase/{item}', fn () => Inertia::render('Welcome'))->name('purchase.create');
 });
