@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { Head, Link, router, useForm } from '@inertiajs/vue3'
+import axios from 'axios'
 
+import CommentCard from '@/Components/CommentCard.vue'
 import CommentIcon from '@/Components/CommentIcon.vue'
 import FavoriteIcon from '@/Components/FavoriteIcon.vue'
+import InputError from '@/Components/InputError.vue'
 import { toggleFavorite } from '@/functions'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
 import { Comment, Item } from '@/types'
@@ -23,7 +26,17 @@ function onToggleFavorite() {
 }
 
 function onSendComment() {
-  alert('TODO コメント送信')
+  axios
+    .post(route('comments.store', { item: props.item.data }), form.data())
+    .then(() => {
+      form.reset()
+      router.reload()
+    })
+    .catch((error) => {
+      if (error.response.status === 422) {
+        form.setError('content', error.response.data.message)
+      }
+    })
 }
 </script>
 
@@ -71,50 +84,17 @@ function onSendComment() {
           <section>
             <ul class="space-y-5">
               <li v-for="comment in comments.data" :key="comment.id">
-                <div
-                  class="flex items-center"
-                  :class="{ 'flex-row-reverse': comment.user.id === item.data.seller.id }"
-                >
-                  <Link
-                    href="#"
-                    class="flex gap-x-2 hover:opacity-75 focus:opacity-75"
-                    :class="{ 'flex-row-reverse': comment.user.id === item.data.seller.id }"
-                  >
-                    <img
-                      v-if="comment.user.image_url"
-                      :src="comment.user.image_url"
-                      alt=""
-                      class="size-6 rounded-full"
-                    />
-                    <div
-                      v-else
-                      class="flex size-6 items-center justify-center rounded-full bg-red-500 text-sm text-white after:content-[attr(data-text)]"
-                      :data-text="comment.user.name?.[0]"
-                    ></div>
-                    <span class="text-base font-bold">{{ comment.user.name ?? '' }}</span>
-                  </Link>
-                  <span
-                    v-if="comment.user.id === item.data.seller.id"
-                    class="mr-auto inline-block text-sm text-gray-400"
-                  >
-                    (出品者)
-                  </span>
-                </div>
-                <div class="mt-1 space-y-2 rounded bg-gray-50 p-1">
-                  <p class="break-words">
-                    <template v-for="(line, index) in comment.content.split(/\n/)" :key="index">
-                      <span>{{ line }}</span>
-                      <br />
-                    </template>
-                  </p>
-                  <p class="text-right text-xs text-gray-400">{{ comment.created_at }}</p>
-                </div>
+                <CommentCard
+                  :comment="comment"
+                  :is-seller="comment.user.id === item.data.seller.id"
+                />
               </li>
             </ul>
           </section>
 
           <section>
             <form @submit.prevent="onSendComment">
+              <InputError :message="form.errors.content" />
               <textarea
                 v-model="form.content"
                 class="h-24 w-full rounded-lg border border-gray-300 p-2"

@@ -56,7 +56,7 @@ function onToggleFavorite() {
                 class="flex w-fit flex-col items-center"
               >
                 <CommentIcon class="size-6" />
-                <span class="text-xs">0</span>
+                <span class="text-xs">{{ item.data.comment_count }}</span>
               </Link>
             </div>
             <div class="my-4">
