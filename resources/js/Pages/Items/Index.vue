@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3'
-import { useIntersectionObserver } from '@vueuse/core'
-import axios from 'axios'
-import { ref } from 'vue'
+import { Head } from '@inertiajs/vue3'
 
+import ItemList from '@/Components/ItemList.vue'
 import NavLink from '@/Components/NavLink.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
 import { Item, Paginator } from '@/types'
@@ -14,26 +12,12 @@ const props = defineProps<{
   searchString?: string
 }>()
 
-const allItems = ref<Item[]>(props.items.data)
-const currentPage = ref<number>(props.items.meta.current_page)
-const lastPage = ref<number>(props.items.meta.last_page)
-const pageBottom = ref<HTMLElement | null>(null)
-
-useIntersectionObserver(pageBottom, ([{ isIntersecting }]) => {
-  if (!isIntersecting || currentPage.value >= lastPage.value) {
-    return
-  }
-
-  const params = props.searchString
-    ? { q: props.searchString, page: currentPage.value + 1 }
-    : { page: currentPage.value + 1 }
-
-  axios.get(route(props.routeName, params)).then(({ data }) => {
-    allItems.value = [...allItems.value, ...data.data]
-    currentPage.value = data.meta.current_page
-    lastPage.value = data.meta.last_page
+function makeNextUrl(nextPage: number): string {
+  return route(props.routeName, {
+    page: nextPage,
+    q: props.searchString
   })
-})
+}
 </script>
 
 <template>
@@ -61,27 +45,7 @@ useIntersectionObserver(pageBottom, ([{ isIntersecting }]) => {
     </nav>
 
     <div class="p-12">
-      <ul dusk="item-list" class="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-16">
-        <li v-for="item in allItems" :key="item.id" class="flex justify-center">
-          <Link :href="route('items.show', { item: item })">
-            <img :src="item.image_url" alt="商品画像" class="size-32" />
-          </Link>
-        </li>
-
-        <template v-if="currentPage < lastPage">
-          <li
-            v-for="i in Array.from({ length: 10 }).map((_, i) => i)"
-            :key="'dummy-key-' + i"
-            class="flex justify-center"
-          >
-            <div class="size-32 animate-pulse bg-gray-200"></div>
-          </li>
-
-          <li ref="pageBottom" class="flex justify-center">
-            <div class="size-32 animate-pulse bg-gray-200"></div>
-          </li>
-        </template>
-      </ul>
+      <ItemList :items="items" :next-url="makeNextUrl" />
     </div>
   </CommonLayout>
 </template>

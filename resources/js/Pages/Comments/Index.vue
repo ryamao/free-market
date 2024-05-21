@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { Head, Link, router, useForm } from '@inertiajs/vue3'
+import { Head, router, useForm } from '@inertiajs/vue3'
 import axios from 'axios'
 
 import CommentCard from '@/Components/CommentCard.vue'
-import CommentIcon from '@/Components/CommentIcon.vue'
-import FavoriteIcon from '@/Components/FavoriteIcon.vue'
 import InputError from '@/Components/InputError.vue'
-import { toggleFavorite } from '@/functions'
+import ItemDetailTop from '@/Components/ItemDetailTop.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
 import { Comment, Item } from '@/types'
 
@@ -18,12 +16,6 @@ const props = defineProps<{
 const form = useForm({
   content: ''
 })
-
-function onToggleFavorite() {
-  toggleFavorite(props.item.data).then(() => {
-    router.reload({ only: ['item'] })
-  })
-}
 
 function onSendComment() {
   axios
@@ -51,35 +43,7 @@ function onSendComment() {
         </div>
 
         <div class="space-y-10">
-          <section>
-            <h2 class="text-3xl font-bold">{{ item.data.name }}</h2>
-            <p class="my-4 text-2xl">¥{{ item.data.price.toLocaleString() }}</p>
-            <div class="mx-2 my-4 flex gap-x-8">
-              <form @submit.prevent="onToggleFavorite">
-                <button
-                  type="submit"
-                  class="flex w-fit flex-col items-center"
-                  :class="{ 'cursor-not-allowed': $page.props.auth.user === null }"
-                  :disabled="$page.props.auth.user === null"
-                  dusk="favorite-button"
-                >
-                  <FavoriteIcon
-                    class="size-6"
-                    :class="{ 'hover:text-gray-500': $page.props.auth.user === null }"
-                    :is-favorite="item.data.is_favorite"
-                  />
-                  <span class="text-xs" dusk="favorite-count">{{ item.data.favorite_count }}</span>
-                </button>
-              </form>
-              <Link
-                :href="route('comments.index', { item: item.data })"
-                class="flex w-fit flex-col items-center"
-              >
-                <CommentIcon class="size-6" />
-                <span class="text-xs">{{ item.data.comment_count }}</span>
-              </Link>
-            </div>
-          </section>
+          <ItemDetailTop :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
 
           <section>
             <ul class="space-y-5">
