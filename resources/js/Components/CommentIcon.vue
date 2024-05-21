@@ -13,7 +13,7 @@ const commentIconPath = `M ${x1} ${y1} A 1 1.75 45 0 0 ${x2} ${y2} A 80 80 0 1 0
     viewBox="-100 -100 200 200"
     fill="none"
     stroke="currentColor"
-    class="text-gray-500 transition duration-150 ease-in-out hover:text-gray-400 focus:text-gray-400"
+    class="text-gray-500"
   >
     <path stroke-width="15" :d="commentIconPath" />
     <circle cx="-33" cy="0" r="10" fill="currentColor" />
