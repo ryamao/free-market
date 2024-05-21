@@ -49,12 +49,13 @@ function getUserColor(user: UserData) {
       />
       <div
         v-else
-        class="flex size-6 items-center justify-center rounded-full bg-red-500 text-sm text-white after:content-[attr(data-text)]"
+        class="flex size-6 items-center justify-center rounded-full text-sm text-white after:content-[attr(data-text)]"
         :class="getUserColor(comment.user)"
         :data-text="comment.user.name?.[0]"
       ></div>
-      <span v-if="comment.user.name" class="text-base font-bold">{{ comment.user.name }}</span>
-      <span v-else class="text-base text-gray-600">(Anonymous)</span>
+      <span class="text-base font-bold" :class="{ 'text-gray-300': comment.user.name === null }">{{
+        comment.user.name ?? '(名前未設定)'
+      }}</span>
     </Link>
     <span v-if="isSeller" class="mr-auto inline-block text-sm text-gray-400">(出品者)</span>
   </div>
