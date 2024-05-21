@@ -6,6 +6,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,7 +17,7 @@ Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show')
 Route::get('/comments/{item}', [CommentController::class, 'index'])->name('comments.index');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/mypage', fn () => Inertia::render('Dashboard'))->name('dashboard');
+    Route::get('/mypage', [UserController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/comments/{item}', [CommentController::class, 'store'])->name('comments.store');
 
+    Route::get('/purchase', fn () => Inertia::render('Dashboard', ['user' => auth()->user(), 'routeName' => 'purchase.index']))->name('purchase.index');
     Route::get('/purchase/{item}', fn () => Inertia::render('Welcome'))->name('purchase.create');
 });
 
