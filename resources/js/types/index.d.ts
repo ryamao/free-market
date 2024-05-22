@@ -4,6 +4,12 @@ export interface UserData {
   image_url: ?string
 }
 
+export interface Profile {
+  postcode: ?string
+  address: ?string
+  building: ?string
+}
+
 export interface Item {
   id: number
   seller: UserData

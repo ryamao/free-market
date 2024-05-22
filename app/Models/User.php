@@ -13,6 +13,9 @@ use Illuminate\Notifications\Notifiable;
  * @property string $email
  * @property string|null $name
  * @property string|null $image_url
+ * @property string|null $postcode
+ * @property string|null $address
+ * @property string|null $building
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Collection<\App\Models\Item> $items
@@ -28,9 +31,13 @@ final class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'name',
+        'image_url',
+        'postcode',
+        'address',
+        'building',
     ];
 
     /**

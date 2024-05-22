@@ -2,11 +2,12 @@
 import { Head, Link } from '@inertiajs/vue3'
 
 import NavLink from '@/Components/NavLink.vue'
+import UserIcon from '@/Components/UserIcon.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
 import { UserData } from '@/types'
 
 defineProps<{
-  user: UserData
+  user: { data: UserData }
   routeName: string
 }>()
 </script>
@@ -17,17 +18,9 @@ defineProps<{
   <CommonLayout>
     <section class="mx-auto my-12 flex max-w-screen-md items-center justify-between px-8">
       <div class="flex items-center gap-x-8">
-        <span>
-          <img v-if="user.image_url" :src="user.image_url" alt="" class="size-20 rounded-full" />
-          <div
-            v-else
-            class="flex size-20 items-center justify-center rounded-full text-3xl text-white after:content-[attr(data-text)]"
-            :class="'bg-blue-500'"
-            :data-text="user.name?.[0]"
-          ></div>
-        </span>
-        <h2 class="text-2xl font-bold" :class="{ 'text-gray-300': user.name === null }">
-          {{ user.name ?? '(名前未設定)' }}
+        <UserIcon :user="user.data" class="size-20 text-3xl" />
+        <h2 class="text-2xl font-bold" :class="{ 'text-gray-300': user.data.name == undefined }">
+          {{ user.data.name ?? '(名前未設定)' }}
         </h2>
       </div>
       <div>
