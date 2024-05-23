@@ -8,23 +8,23 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Browser\Pages\ProfileEditPage;
+use Tests\Browser\Pages\ProfilePage;
 use Tests\DuskTestCase;
 
-final class ProfileEditTest extends DuskTestCase
+final class ProfileTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
     private User $user;
 
-    private ProfileEditPage $page;
+    private ProfilePage $page;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->page = new ProfileEditPage();
+        $this->page = new ProfilePage();
     }
 
     #[Test]
@@ -44,7 +44,33 @@ final class ProfileEditTest extends DuskTestCase
                 ->assertInputValue('@postcode-input', $this->user->postcode ?? '')
                 ->assertInputValue('@address-input', $this->user->address ?? '')
                 ->assertInputValue('@building-input', $this->user->building ?? '')
-                ->assertSeeIn('button[type="submit"]', '更新する');
+                ->assertSeeIn('button[type="submit"]', '更新する')
+                ->logout();
         });
+    }
+
+    #[Test]
+    public function プロフィールを更新できる(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->loginAs($this->user)
+                ->visit($this->page)
+                ->type('@name-input', 'updated name')
+                ->type('@postcode-input', '1234567')
+                ->type('@address-input', 'updated address')
+                ->type('@building-input', 'updated building name')
+                ->press('更新する')
+                ->waitForRoute('dashboard')
+                ->logout();
+        });
+
+        $this->assertDatabaseHas('users', [
+            'id' => $this->user->id,
+            'name' => 'updated name',
+            'postcode' => '1234567',
+            'address' => 'updated address',
+            'building' => 'updated building name',
+        ]);
     }
 }

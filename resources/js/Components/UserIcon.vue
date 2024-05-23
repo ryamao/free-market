@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { UserData } from '@/types'
-
-defineProps<{
-  user: UserData
+const props = defineProps<{
+  userId: number
+  userName: string | null
+  imageUrl: string | null
+  forceRefresh: boolean
 }>()
 
 const colorPalette = [
@@ -26,24 +27,22 @@ const colorPalette = [
   'bg-rose-500'
 ]
 
-function getUserColor(user: UserData) {
-  return colorPalette[user.id % colorPalette.length]
-}
+const userColor = colorPalette[props.userId % colorPalette.length]
 </script>
 
 <template>
   <div>
     <img
-      v-if="user.image_url"
-      :src="user.image_url"
+      v-if="imageUrl"
+      :src="imageUrl + (forceRefresh ? '?timestamp=' + new Date().getTime() : '')"
       alt=""
       class="size-full rounded-full object-cover"
     />
     <div
       v-else
       class="flex size-full items-center justify-center rounded-full text-white after:content-[attr(data-text)]"
-      :class="getUserColor(user)"
-      :data-text="user.name?.[0]"
+      :class="userColor"
+      :data-text="userName?.[0]"
     ></div>
   </div>
 </template>

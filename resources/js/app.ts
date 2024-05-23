@@ -2,10 +2,17 @@ import './bootstrap'
 import '../css/app.css'
 
 import { createInertiaApp } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { createApp, DefineComponent, h } from 'vue'
 
 import { ZiggyVue } from '../../vendor/tightenco/ziggy'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.tz.setDefault('Asia/Tokyo')
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 

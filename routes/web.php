@@ -19,9 +19,8 @@ Route::get('/comments/{item}', [CommentController::class, 'index'])->name('comme
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/mypage/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/mylist', [FavoriteController::class, 'index'])->name('mylist.index');
     Route::post('/mylist/{item}', [FavoriteController::class, 'store'])->name('mylist.store');

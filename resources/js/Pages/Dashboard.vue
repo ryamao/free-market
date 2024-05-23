@@ -18,7 +18,13 @@ defineProps<{
   <CommonLayout>
     <section class="mx-auto my-12 flex max-w-screen-md items-center justify-between px-8">
       <div class="flex items-center gap-x-8">
-        <UserIcon :user="user.data" class="size-20 text-3xl" />
+        <UserIcon
+          :user-id="user.data.id"
+          :user-name="user.data.name"
+          :image-url="user.data.image_url"
+          :force-refresh="true"
+          class="size-32 text-5xl"
+        />
         <h2 class="text-2xl font-bold" :class="{ 'text-gray-300': user.data.name == undefined }">
           {{ user.data.name ?? '(名前未設定)' }}
         </h2>

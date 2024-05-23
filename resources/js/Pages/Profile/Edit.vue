@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3'
 import { useFileDialog } from '@vueuse/core'
+import imageCompression from 'browser-image-compression'
 import { ref } from 'vue'
 
 import InputError from '@/Components/InputError.vue'
@@ -16,7 +17,8 @@ const props = defineProps<{
   profile: { data: Profile }
 }>()
 
-const userData = ref(props.user.data)
+const imageUrl = ref(props.user.data.image_url)
+const forceRefreshIcon = ref(true)
 
 const form = useForm({
   _method: 'put',
@@ -33,13 +35,10 @@ onChange((files) => {
   const image = files?.[0]
   if (image) {
     form.image = image
-    userData.value.image_url = URL.createObjectURL(image)
+    imageUrl.value = URL.createObjectURL(image)
+    forceRefreshIcon.value = false
   }
 })
-
-function onUpdateName(value: string) {
-  userData.value.name = value
-}
 
 function onUpdatePostcode(value: string) {
   if (form.address !== '' || !/^\d{7}$/.test(value)) {
@@ -66,13 +65,16 @@ function onUpdatePostcode(value: string) {
   })
 }
 
-function submit() {
-  alert(JSON.stringify(form, null, 2))
-  // form.post(route('profile.update'), {
-  //   onSuccess: () => {
-  //     form.reset()
-  //   }
-  // })
+async function submit() {
+  if (form.image) {
+    form.image = await imageCompression(form.image, { maxSizeMB: 1, maxWidthOrHeight: 480 })
+  }
+
+  form.post(route('profile.update'), {
+    onSuccess: () => {
+      form.reset()
+    }
+  })
 }
 </script>
 
@@ -84,7 +86,13 @@ function submit() {
       <h2 class="text-center text-2xl font-bold">プロフィール設定</h2>
 
       <div class="flex items-center gap-x-8">
-        <UserIcon :user="userData" class="size-32 text-5xl" />
+        <UserIcon
+          :user-id="user.data.id"
+          :user-name="form.name"
+          :image-url="imageUrl"
+          :force-refresh="forceRefreshIcon"
+          class="size-32 text-5xl"
+        />
         <button
           type="button"
           class="inline-flex items-center justify-center rounded-md border border-emerald-600 bg-white px-6 py-1.5 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
@@ -104,7 +112,6 @@ function submit() {
               type="text"
               class="mt-1 block w-full"
               required
-              @update:model-value="onUpdateName"
             />
             <InputError class="mt-2" :message="form.errors.name" />
           </div>
