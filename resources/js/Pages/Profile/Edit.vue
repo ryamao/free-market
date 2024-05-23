@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, useForm, usePage } from '@inertiajs/vue3'
 import { useFileDialog } from '@vueuse/core'
 import imageCompression from 'browser-image-compression'
 import { ref } from 'vue'
@@ -10,23 +10,19 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import UserIcon from '@/Components/UserIcon.vue'
 import SubPageLayout from '@/Layouts/SubPageLayout.vue'
-import { Profile, UserData } from '@/types'
 
-const props = defineProps<{
-  user: { data: UserData }
-  profile: { data: Profile }
-}>()
+const page = usePage()
 
-const imageUrl = ref(props.user.data.image_url)
+const imageUrl = ref(page.props.auth.user.image_url)
 const forceRefreshIcon = ref(true)
 
 const form = useForm({
   _method: 'put',
   image: null as File | null,
-  name: props.user.data.name ?? '',
-  postcode: props.profile.data.postcode ?? '',
-  address: props.profile.data.address ?? '',
-  building: props.profile.data.building ?? ''
+  name: page.props.auth.user.name ?? '',
+  postcode: page.props.auth.user.postcode ?? '',
+  address: page.props.auth.user.address ?? '',
+  building: page.props.auth.user.building ?? ''
 })
 
 const { open, onChange } = useFileDialog()
@@ -87,7 +83,7 @@ async function submit() {
 
       <div class="flex items-center gap-x-8">
         <UserIcon
-          :user-id="user.data.id"
+          :user-id="$page.props.auth.user.id"
           :user-name="form.name"
           :image-url="imageUrl"
           :force-refresh="forceRefreshIcon"

@@ -32,13 +32,6 @@ final class UsersDashboardTest extends TestCase
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Dashboard')
-            ->has('user', fn (AssertableInertia $page) => $page
-                ->has('data', fn (AssertableInertia $page) => $page
-                    ->where('id', $this->user->id)
-                    ->where('name', $this->user->name)
-                    ->where('image_url', $this->user->image_url)
-                )
-            )
             ->where('routeName', 'dashboard')
         );
     }
