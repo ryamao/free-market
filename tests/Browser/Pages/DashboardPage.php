@@ -14,7 +14,7 @@ final class DashboardPage extends Page
      */
     public function url(): string
     {
-        return route('dashboard');
+        return route('dashboard', absolute: false);
     }
 
     /**
@@ -33,7 +33,7 @@ final class DashboardPage extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@user-name' => 'h2',
         ];
     }
 }

@@ -46,7 +46,12 @@ function search() {
               <Link :href="route('dashboard')" class="text-white">マイページ</Link>
             </li>
             <li>
-              <Link href="#" class="rounded-sm bg-white px-4 py-1.5 text-black">出品</Link>
+              <Link
+                :href="route('items.create')"
+                class="rounded-sm bg-white px-4 py-1.5 text-black"
+              >
+                出品
+              </Link>
             </li>
           </ul>
         </template>

@@ -4,10 +4,8 @@ import { Head, Link } from '@inertiajs/vue3'
 import NavLink from '@/Components/NavLink.vue'
 import UserIcon from '@/Components/UserIcon.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
-import { UserData } from '@/types'
 
 defineProps<{
-  user: { data: UserData }
   routeName: string
 }>()
 </script>
@@ -19,20 +17,23 @@ defineProps<{
     <section class="mx-auto my-12 flex max-w-screen-md items-center justify-between px-8">
       <div class="flex items-center gap-x-8">
         <UserIcon
-          :user-id="user.data.id"
-          :user-name="user.data.name"
-          :image-url="user.data.image_url"
+          :user-id="$page.props.auth.user.id"
+          :user-name="$page.props.auth.user.name"
+          :image-url="$page.props.auth.user.image_url"
           :force-refresh="true"
           class="size-32 text-5xl"
         />
-        <h2 class="text-2xl font-bold" :class="{ 'text-gray-300': user.data.name == undefined }">
-          {{ user.data.name ?? '(名前未設定)' }}
+        <h2
+          class="text-2xl font-bold"
+          :class="{ 'text-gray-300': $page.props.auth.user.name == undefined }"
+        >
+          {{ $page.props.auth.user.name ?? '(名前未設定)' }}
         </h2>
       </div>
       <div>
         <Link
           :href="route('profile.edit')"
-          class="inline-flex items-center justify-center rounded-md border border-emerald-600 bg-white px-6 py-1 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
+          class="inline-flex items-center justify-center rounded-md border-2 border-emerald-600 bg-white px-6 py-1 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
         >
           プロフィールを編集
         </Link>

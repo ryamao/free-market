@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, useForm, usePage } from '@inertiajs/vue3'
 import { useFileDialog } from '@vueuse/core'
 import imageCompression from 'browser-image-compression'
 import { ref } from 'vue'
@@ -10,26 +10,25 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import UserIcon from '@/Components/UserIcon.vue'
 import SubPageLayout from '@/Layouts/SubPageLayout.vue'
-import { Profile, UserData } from '@/types'
 
-const props = defineProps<{
-  user: { data: UserData }
-  profile: { data: Profile }
-}>()
+const page = usePage()
 
-const imageUrl = ref(props.user.data.image_url)
+const imageUrl = ref(page.props.auth.user.image_url)
 const forceRefreshIcon = ref(true)
 
 const form = useForm({
   _method: 'put',
   image: null as File | null,
-  name: props.user.data.name ?? '',
-  postcode: props.profile.data.postcode ?? '',
-  address: props.profile.data.address ?? '',
-  building: props.profile.data.building ?? ''
+  name: page.props.auth.user.name ?? '',
+  postcode: page.props.auth.user.postcode ?? '',
+  address: page.props.auth.user.address ?? '',
+  building: page.props.auth.user.building ?? ''
 })
 
-const { open, onChange } = useFileDialog()
+const { open, onChange } = useFileDialog({
+  accept: 'image/*',
+  multiple: false
+})
 
 onChange((files) => {
   const image = files?.[0]
@@ -82,12 +81,12 @@ async function submit() {
   <Head title="プロフィール設定" />
 
   <SubPageLayout>
-    <section class="mx-auto max-w-screen-md space-y-8 p-12">
+    <section class="mx-auto max-w-screen-sm space-y-8 p-12">
       <h2 class="text-center text-2xl font-bold">プロフィール設定</h2>
 
       <div class="flex items-center gap-x-8">
         <UserIcon
-          :user-id="user.data.id"
+          :user-id="$page.props.auth.user.id"
           :user-name="form.name"
           :image-url="imageUrl"
           :force-refresh="forceRefreshIcon"
@@ -95,7 +94,7 @@ async function submit() {
         />
         <button
           type="button"
-          class="inline-flex items-center justify-center rounded-md border border-emerald-600 bg-white px-6 py-1.5 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
+          class="inline-flex items-center justify-center rounded-md border-2 border-emerald-600 bg-white px-6 py-1.5 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
           @click="() => open()"
         >
           画像を選択する
