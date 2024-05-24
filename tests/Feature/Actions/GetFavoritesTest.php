@@ -31,7 +31,7 @@ final class GetFavoritesTest extends TestCase
         $user = User::factory()->create();
         $condition = Condition::factory()->create();
         $items = Item::factory()->count(3)->recycle($condition)->create();
-        Item::factory()->count(2)->create();
+        Item::factory()->count(2)->recycle($condition)->create();
 
         $items->each(fn ($item) => $user->favorites()->attach($item));
 
