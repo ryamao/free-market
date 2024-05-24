@@ -33,7 +33,7 @@ defineProps<{
       <div>
         <Link
           :href="route('profile.edit')"
-          class="inline-flex items-center justify-center rounded-md border border-emerald-600 bg-white px-6 py-1 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
+          class="inline-flex items-center justify-center rounded-md border-2 border-emerald-600 bg-white px-6 py-1 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
         >
           プロフィールを編集
         </Link>

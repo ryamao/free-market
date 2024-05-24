@@ -25,7 +25,10 @@ const form = useForm({
   building: page.props.auth.user.building ?? ''
 })
 
-const { open, onChange } = useFileDialog()
+const { open, onChange } = useFileDialog({
+  accept: 'image/*',
+  multiple: false
+})
 
 onChange((files) => {
   const image = files?.[0]
@@ -78,7 +81,7 @@ async function submit() {
   <Head title="プロフィール設定" />
 
   <SubPageLayout>
-    <section class="mx-auto max-w-screen-md space-y-8 p-12">
+    <section class="mx-auto max-w-screen-sm space-y-8 p-12">
       <h2 class="text-center text-2xl font-bold">プロフィール設定</h2>
 
       <div class="flex items-center gap-x-8">
@@ -91,7 +94,7 @@ async function submit() {
         />
         <button
           type="button"
-          class="inline-flex items-center justify-center rounded-md border border-emerald-600 bg-white px-6 py-1.5 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
+          class="inline-flex items-center justify-center rounded-md border-2 border-emerald-600 bg-white px-6 py-1.5 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
           @click="() => open()"
         >
           画像を選択する
