@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\AddComment;
 use App\Actions\GetComments;
-use App\Http\Requests\CommentStoreRequest;
+use App\Http\Requests\CommentsStoreRequest;
 use App\Http\Resources\ItemResource;
 use App\Models\Item;
 use Inertia\Inertia;
@@ -23,7 +23,7 @@ final class CommentController extends Controller
         ]);
     }
 
-    public function store(CommentStoreRequest $request, Item $item, AddComment $action): \Illuminate\Http\Response
+    public function store(CommentsStoreRequest $request, Item $item, AddComment $action): \Illuminate\Http\Response
     {
         assert($request->user() !== null);
 

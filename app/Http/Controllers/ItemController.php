@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateNewItem;
 use App\Actions\GetLatestItems;
 use App\Actions\SearchItems;
+use App\Http\Requests\ItemsStoreRequest;
 use App\Http\Resources\ItemResource;
 use App\Models\Condition;
 use App\Models\Item;
@@ -71,5 +73,12 @@ final class ItemController extends Controller
         return Inertia::render('Items/Create', [
             'conditions' => $conditions,
         ]);
+    }
+
+    public function store(ItemsStoreRequest $request, CreateNewItem $action): \Illuminate\Http\RedirectResponse
+    {
+        $action($request);
+
+        return redirect()->route('dashboard');
     }
 }

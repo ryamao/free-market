@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @property-read string $content
  */
-final class CommentStoreRequest extends FormRequest
+final class CommentsStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

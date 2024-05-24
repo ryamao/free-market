@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3'
 import { useDropZone, useFileDialog } from '@vueuse/core'
+import imageCompression from 'browser-image-compression'
 import { ref } from 'vue'
 
+import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import Modal from '@/Components/Modal.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -56,9 +58,23 @@ function closeModal() {
   confirmingItemCreation.value = false
 }
 
-function createItem() {
-  alert('商品を出品しました')
-  confirmingItemCreation.value = false
+async function createNewItem() {
+  if (!form.image) {
+    return
+  }
+
+  form.image = await imageCompression(form.image, { maxSizeMB: 1, maxWidthOrHeight: 1024 })
+
+  form.post('/items', {
+    onError: () => {
+      confirmingItemCreation.value = false
+      alert('商品の出品に失敗しました')
+    },
+    onSuccess: () => {
+      confirmingItemCreation.value = false
+      alert('商品を出品しました')
+    }
+  })
 }
 </script>
 
@@ -81,6 +97,7 @@ function createItem() {
               class="w-full"
               required
             />
+            <InputError class="mt-2" :message="form.errors.categories" />
           </div>
           <div>
             <InputLabel for="condition">商品の状態</InputLabel>
@@ -95,6 +112,7 @@ function createItem() {
                 {{ condition }}
               </option>
             </select>
+            <InputError class="mt-2" :message="form.errors.condition" />
           </div>
         </div>
 
@@ -105,6 +123,7 @@ function createItem() {
           <div>
             <InputLabel for="name">商品名</InputLabel>
             <TextInput id="name" v-model="form.name" type="text" class="w-full" required />
+            <InputError class="mt-2" :message="form.errors.name" />
           </div>
           <div>
             <InputLabel for="description">商品の説明</InputLabel>
@@ -115,6 +134,7 @@ function createItem() {
               rows="5"
               required
             />
+            <InputError class="mt-2" :message="form.errors.description" />
           </div>
         </div>
 
@@ -137,6 +157,7 @@ function createItem() {
                 ¥
               </div>
             </div>
+            <InputError class="mt-2" :message="form.errors.price" />
           </div>
         </div>
 
@@ -162,6 +183,7 @@ function createItem() {
                 画像を選択する
               </button>
             </div>
+            <InputError class="mt-2" :message="form.errors.image" />
           </div>
         </div>
 
@@ -225,7 +247,7 @@ function createItem() {
               class="w-full py-0.5"
               :class="{ 'opacity-25': form.processing }"
               :disabled="form.processing"
-              @click="createItem"
+              @click="createNewItem"
             >
               出品する
             </PrimaryButton>
