@@ -10,7 +10,7 @@ use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class UsersDashboardTest extends TestCase
+final class DashboardTest extends TestCase
 {
     use RefreshDatabase;
 

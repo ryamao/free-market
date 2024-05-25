@@ -61,10 +61,10 @@ final class ShowTest extends DuskTestCase
                 ->assertSeeIn('main', 'サンプルテキスト')
                 ->assertSeeIn('main', '商品の情報')
                 ->assertSeeIn('main', 'カテゴリー')
-                ->assertSeeIn('main a[href="'.route('items.search', ['q' => 'category:洋服']).'"]', '洋服')
-                ->assertSeeIn('main a[href="'.route('items.search', ['q' => 'category:メンズ']).'"]', 'メンズ')
+                ->assertSeeIn('main a[href="'.route('home.search', ['q' => 'category:洋服']).'"]', '洋服')
+                ->assertSeeIn('main a[href="'.route('home.search', ['q' => 'category:メンズ']).'"]', 'メンズ')
                 ->assertSeeIn('main', '商品の状態')
-                ->assertSeeIn('main a[href="'.route('items.search', ['q' => 'condition:良好']).'"]', '良好');
+                ->assertSeeIn('main a[href="'.route('home.search', ['q' => 'condition:良好']).'"]', '良好');
         });
     }
 
@@ -115,7 +115,7 @@ final class ShowTest extends DuskTestCase
             $browser
                 ->visit($this->page)
                 ->clickLink('洋服')
-                ->waitForRoute('items.search')
+                ->waitForRoute('home.search')
                 ->assertQueryStringHas('q', 'category:洋服');
         });
     }
@@ -127,7 +127,7 @@ final class ShowTest extends DuskTestCase
             $browser
                 ->visit($this->page)
                 ->clickLink('良好')
-                ->waitForRoute('items.search')
+                ->waitForRoute('home.search')
                 ->assertQueryStringHas('q', 'condition:良好');
         });
     }

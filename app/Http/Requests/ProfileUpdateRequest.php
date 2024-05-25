@@ -7,6 +7,13 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Stringable;
 
+/**
+ * @property-read string $name
+ * @property-read string|null $postcode
+ * @property-read string|null $address
+ * @property-read string|null $building
+ * @property-read \Illuminate\Http\UploadedFile|null $image
+ */
 final class ProfileUpdateRequest extends FormRequest
 {
     /**
@@ -20,10 +27,10 @@ final class ProfileUpdateRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'image', 'max:2048'],
             'postcode' => ['nullable', 'string', 'digits:7'],
             'address' => ['nullable', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ];
     }
 }

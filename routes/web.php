@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
@@ -13,10 +14,13 @@ use Inertia\Inertia;
 
 // トップページ
 
-Route::get('/', [ItemController::class, 'index'])->name('items.index');
-Route::get('/search', [ItemController::class, 'search'])->name('items.search');
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/search', [HomeController::class, 'search'])->name('home.search');
 Route::middleware('auth')
-    ->get('/mylist', [FavoriteController::class, 'index'])->name('mylist.index');
+    ->get('/mylist', [HomeController::class, 'mylist'])->name('home.mylist');
+
+Route::get('/items', [ItemController::class, 'index'])->name('items.index');
+Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
 // 商品詳細ページ
 

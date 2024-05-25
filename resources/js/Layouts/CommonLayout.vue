@@ -15,7 +15,7 @@ const form = useForm({
 })
 
 function search() {
-  form.get(route('items.search'))
+  form.get(route('home.search'))
 }
 
 function handleLogout() {

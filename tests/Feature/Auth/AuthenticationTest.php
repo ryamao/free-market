@@ -79,6 +79,6 @@ final class AuthenticationTest extends TestCase
         $response = $this->actingAs($this->user)->fromRoute('dashboard')->post(route('logout'));
 
         $this->assertGuest();
-        $response->assertRedirectToRoute('items.index');
+        $response->assertRedirectToRoute('home.index');
     }
 }
