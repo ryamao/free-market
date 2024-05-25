@@ -11,7 +11,7 @@ use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class ItemsCreateTest extends TestCase
+final class SalesCreateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -29,7 +29,7 @@ final class ItemsCreateTest extends TestCase
     {
         $conditions = Condition::factory(5)->create();
 
-        $response = $this->actingAs($this->user)->get(route('items.create'));
+        $response = $this->actingAs($this->user)->get(route('sales.create'));
 
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page

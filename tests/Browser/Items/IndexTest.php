@@ -165,8 +165,8 @@ final class IndexTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs($this->user)
                 ->visit(new Items\IndexPage())
-                ->clickLink('ログアウト')
-                ->waitForRoute('items.index');
+                ->press('ログアウト')
+                ->waitForRoute('login');
         });
 
         $this->assertGuest();

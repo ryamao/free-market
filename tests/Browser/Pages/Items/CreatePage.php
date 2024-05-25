@@ -14,7 +14,7 @@ final class CreatePage extends Page
      */
     public function url(): string
     {
-        return route('items.create', absolute: false);
+        return route('sales.create', absolute: false);
     }
 
     /**

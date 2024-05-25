@@ -6,6 +6,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -54,8 +55,8 @@ Route::middleware('auth')->group(function () {
 // 出品ページ
 
 Route::middleware('auth')->group(function () {
-    Route::get('/exhibit', [ItemController::class, 'create'])->name('items.create');
-    Route::post('/items', [ItemController::class, 'store'])->name('items.store');
+    Route::get('/sales', [SaleController::class, 'create'])->name('sales.create');
+    Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
 });
 
 require __DIR__.'/auth.php';
