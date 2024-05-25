@@ -42,21 +42,22 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/purchase', fn () => Inertia::render('Dashboard', ['user' => auth()->user(), 'routeName' => 'purchase.index']))->name('purchase.index');
+    Route::get('/mypage/purchases', fn () => Inertia::render('Dashboard', ['routeName' => 'dashboard.purchases']))->name('dashboard.purchases');
+    Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
 });
 
 // プロフィール編集ページ
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // 出品ページ
 
 Route::middleware('auth')->group(function () {
-    Route::get('/sales', [SaleController::class, 'create'])->name('sales.create');
-    Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
+    Route::get('/sell', [SaleController::class, 'create'])->name('sales.create');
+    Route::post('/sell', [SaleController::class, 'store'])->name('sales.store');
 });
 
 require __DIR__.'/auth.php';

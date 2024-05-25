@@ -1,13 +1,46 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
+import { useIntersectionObserver } from '@vueuse/core'
+import axios from 'axios'
+import { ref } from 'vue'
 
+import ItemCard from '@/Components/ItemCard.vue'
 import NavLink from '@/Components/NavLink.vue'
 import UserIcon from '@/Components/UserIcon.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
+import { Item } from '@/types'
 
-defineProps<{
-  routeName: string
+const props = defineProps<{
+  routeName: 'dashboard' | 'dashboard.purchases'
 }>()
+
+const items = ref<Item[]>([])
+const nextPage = ref<number>(1)
+const lastPage = ref<number>(1)
+
+const lastItemRef = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(lastItemRef, ([{ isIntersecting }]) => {
+  if (!isIntersecting || nextPage.value > lastPage.value) {
+    return
+  }
+
+  let endpoint
+  switch (props.routeName) {
+    case 'dashboard':
+      endpoint = 'sales.index'
+      break
+    case 'dashboard.purchases':
+      endpoint = 'purchases.index'
+      break
+  }
+
+  axios.get(route(endpoint, { page: nextPage.value })).then(({ data }) => {
+    items.value.push(...data.data)
+    nextPage.value = data.meta.current_page + 1
+    lastPage.value = data.meta.last_page
+  })
+})
 </script>
 
 <template>
@@ -48,7 +81,10 @@ defineProps<{
           </NavLink>
         </li>
         <li>
-          <NavLink :href="route('purchase.index')" :active="routeName === 'purchase.index'">
+          <NavLink
+            :href="route('dashboard.purchases')"
+            :active="routeName === 'dashboard.purchases'"
+          >
             購入した商品
           </NavLink>
         </li>
@@ -56,7 +92,17 @@ defineProps<{
     </nav>
 
     <section class="p-12">
-      <!-- <ItemList :items="items" :next-url="makeNextUrl" /> -->
+      <ul class="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-8">
+        <li v-for="item in items" :key="item.id">
+          <Link :href="route('items.show', { item: item })">
+            <ItemCard :item="item" />
+          </Link>
+        </li>
+
+        <li v-if="nextPage <= lastPage" ref="lastItemRef">
+          <ItemCard />
+        </li>
+      </ul>
     </section>
   </CommonLayout>
 </template>
