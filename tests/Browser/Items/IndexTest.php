@@ -118,7 +118,7 @@ final class IndexTest extends DuskTestCase
                 ->visit(new Items\IndexPage())
                 ->clickLink('マイリスト')
                 ->waitForRoute('home.mylist')
-                ->waitFor('@item-list > li:nth-of-type(1)')
+                ->waitFor('@item-list > li:nth-of-type(1) > a')
                 ->assertAttribute(
                     '@item-list > li:nth-of-type(1) > a',
                     'href',
