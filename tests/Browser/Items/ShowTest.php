@@ -29,8 +29,9 @@ final class ShowTest extends DuskTestCase
 
         $this->user = User::factory()->create();
 
+        $seller = User::factory()->create();
         $this->item = Item::factory()
-            ->for($this->user, 'seller')
+            ->for($seller, 'seller')
             ->for(Condition::factory()->state(['name' => '良好']))
             ->create(['description' => 'サンプルテキスト']);
 

@@ -26,7 +26,11 @@ const props = defineProps<{
         <div class="space-y-10">
           <div class="space-y-5">
             <ItemDetailTop :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
-            <PurchaseLink :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
+            <PurchaseLink
+              v-if="item.data.seller.id !== $page.props.auth.user?.id"
+              :item="item.data"
+              :is-authenticated="$page.props.auth.user !== null"
+            />
           </div>
 
           <section>
