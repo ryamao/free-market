@@ -50,7 +50,7 @@ final class IndexTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($items) {
             $browser->resize(768, 600)
                 ->visit(new Items\IndexPage())
-                ->waitFor('@item-list > li')
+                ->waitFor('@item-list > li:nth-of-type(1)')
                 ->assertAttribute(
                     '@item-list > li:nth-of-type(1) > a',
                     'href',
@@ -118,6 +118,7 @@ final class IndexTest extends DuskTestCase
                 ->visit(new Items\IndexPage())
                 ->clickLink('マイリスト')
                 ->waitForRoute('home.mylist')
+                ->waitFor('@item-list > li:nth-of-type(1)')
                 ->assertAttribute(
                     '@item-list > li:nth-of-type(1) > a',
                     'href',
