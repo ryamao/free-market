@@ -8,7 +8,7 @@ use App\Models\Item;
 use App\Models\User;
 use Database\Seeders\TestDataSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\AssertableInertia;
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -17,32 +17,29 @@ final class ItemsIndexTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function データベースに商品がない場合は商品一覧ページに商品を表示しない(): void
+    public function データベースに商品がない場合(): void
     {
         $this->expectsDatabaseQueryCount(1);
 
-        $response = $this->get(route('items.index'));
+        $response = $this->getJson(route('items.index'));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Items/Index')
-            ->has('items', fn (AssertableInertia $page) => $page
-                ->has('data', 0)
-                ->has('links')
-                ->has('meta', fn (AssertableInertia $page) => $page
-                    ->where('total', 0)
-                    ->where('per_page', 10)
-                    ->where('current_page', 1)
-                    ->where('last_page', 1)
-                    ->where('path', route('items.index', absolute: true))
-                    ->etc()
-                )
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('data', 0)
+            ->has('links')
+            ->has('meta', fn (AssertableJson $json) => $json
+                ->where('total', 0)
+                ->where('per_page', 10)
+                ->where('current_page', 1)
+                ->where('last_page', 1)
+                ->where('path', route('items.index'))
+                ->etc()
             )
         );
     }
 
     #[Test]
-    public function データベースに商品がある場合は商品一覧ページに商品を表示する(): void
+    public function データベースに商品がある場合(): void
     {
         $this->seed(TestDataSeeder::class);
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
@@ -52,31 +49,28 @@ final class ItemsIndexTest extends TestCase
         // items, sellers, conditions, categories, item_category, favorites, comments
         $this->expectsDatabaseQueryCount(7);
 
-        $response = $this->get(route('items.index'));
+        $response = $this->getJson(route('items.index'));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Items/Index')
-            ->has('items', fn (AssertableInertia $page) => $page
-                ->has('data', 10)
-                ->has('data.0', fn (AssertableInertia $page) => $page
-                    ->where('id', $items[0]?->id)
-                    ->etc()
-                )
-                ->has('data.9', fn (AssertableInertia $page) => $page
-                    ->where('id', $items[9]?->id)
-                    ->etc()
-                )
-                ->has('links')
-                ->has('meta', fn (AssertableInertia $page) => $page
-                    ->where('total', $count)
-                    ->where('per_page', 10)
-                    ->where('from', 1)
-                    ->where('to', 10)
-                    ->where('current_page', 1)
-                    ->where('last_page', (int) ceil($count / 10))
-                    ->etc()
-                )
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('data', 10)
+            ->has('data.0', fn (AssertableJson $json) => $json
+                ->where('id', $items[0]?->id)
+                ->etc()
+            )
+            ->has('data.9', fn (AssertableJson $json) => $json
+                ->where('id', $items[9]?->id)
+                ->etc()
+            )
+            ->has('links')
+            ->has('meta', fn (AssertableJson $json) => $json
+                ->where('total', $count)
+                ->where('per_page', 10)
+                ->where('from', 1)
+                ->where('to', 10)
+                ->where('current_page', 1)
+                ->where('last_page', (int) ceil($count / 10))
+                ->etc()
             )
         );
     }
@@ -89,29 +83,26 @@ final class ItemsIndexTest extends TestCase
 
         $this->expectsDatabaseQueryCount(7);
 
-        $response = $this->get(route('items.index', ['page' => 2]));
+        $response = $this->getJson(route('items.index', ['page' => 2]));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Items/Index')
-            ->has('items', fn (AssertableInertia $page) => $page
-                ->has('data', 10)
-                ->has('data.0', fn (AssertableInertia $page) => $page
-                    ->where('id', $items[10]?->id)
-                    ->etc()
-                )
-                ->has('data.9', fn (AssertableInertia $page) => $page
-                    ->where('id', $items[19]?->id)
-                    ->etc()
-                )
-                ->has('links')
-                ->has('meta', fn (AssertableInertia $page) => $page
-                    ->where('per_page', 10)
-                    ->where('from', 11)
-                    ->where('to', 20)
-                    ->where('current_page', 2)
-                    ->etc()
-                )
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('data', 10)
+            ->has('data.0', fn (AssertableJson $json) => $json
+                ->where('id', $items[10]?->id)
+                ->etc()
+            )
+            ->has('data.9', fn (AssertableJson $json) => $json
+                ->where('id', $items[19]?->id)
+                ->etc()
+            )
+            ->has('links')
+            ->has('meta', fn (AssertableJson $json) => $json
+                ->where('per_page', 10)
+                ->where('from', 11)
+                ->where('to', 20)
+                ->where('current_page', 2)
+                ->etc()
             )
         );
     }
@@ -126,29 +117,26 @@ final class ItemsIndexTest extends TestCase
 
         $this->expectsDatabaseQueryCount(7);
 
-        $response = $this->get(route('items.index', ['page' => $lastPage]));
+        $response = $this->getJson(route('items.index', ['page' => $lastPage]));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Items/Index')
-            ->has('items', fn (AssertableInertia $page) => $page
-                ->has('data', $count % 10)
-                ->has('data.0', fn (AssertableInertia $page) => $page
-                    ->where('id', $items[$count - $count % 10]?->id)
-                    ->etc()
-                )
-                ->has('data.'.($count % 10 - 1), fn (AssertableInertia $page) => $page
-                    ->where('id', $items[$count - 1]?->id)
-                    ->etc()
-                )
-                ->has('links')
-                ->has('meta', fn (AssertableInertia $page) => $page
-                    ->where('per_page', 10)
-                    ->where('from', $count - $count % 10 + 1)
-                    ->where('to', $count)
-                    ->where('current_page', $lastPage)
-                    ->etc()
-                )
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('data', $count % 10)
+            ->has('data.0', fn (AssertableJson $json) => $json
+                ->where('id', $items[$count - $count % 10]?->id)
+                ->etc()
+            )
+            ->has('data.'.($count % 10 - 1), fn (AssertableJson $json) => $json
+                ->where('id', $items[$count - 1]?->id)
+                ->etc()
+            )
+            ->has('links')
+            ->has('meta', fn (AssertableJson $json) => $json
+                ->where('per_page', 10)
+                ->where('from', $count - $count % 10 + 1)
+                ->where('to', $count)
+                ->where('current_page', $lastPage)
+                ->etc()
             )
         );
     }
@@ -159,32 +147,22 @@ final class ItemsIndexTest extends TestCase
         $user = User::factory()->create();
         $item = Item::factory()->create();
 
-        $response = $this->get(route('items.index'));
-        $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->has('items', fn (AssertableInertia $page) => $page
-                ->has('data.0', fn (AssertableInertia $page) => $page
-                    ->where('id', $item->id)
-                    ->where('favorite_count', 0)
-                    ->where('is_favorite', false)
-                    ->etc()
-                )
-                ->etc()
-            )
+        $response = $this->getJson(route('items.index'));
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->where('data.0.id', $item->id)
+            ->where('data.0.favorite_count', 0)
+            ->where('data.0.is_favorite', false)
+            ->etc()
         );
 
         $user->favorites()->attach($item);
 
-        $response = $this->actingAs($user)->get(route('items.index'));
-        $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->has('items', fn (AssertableInertia $page) => $page
-                ->has('data.0', fn (AssertableInertia $page) => $page
-                    ->where('id', $item->id)
-                    ->where('favorite_count', 1)
-                    ->where('is_favorite', true)
-                    ->etc()
-                )
-                ->etc()
-            )
+        $response = $this->actingAs($user)->getJson(route('items.index'));
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->where('data.0.id', $item->id)
+            ->where('data.0.favorite_count', 1)
+            ->where('data.0.is_favorite', true)
+            ->etc()
         );
     }
 }

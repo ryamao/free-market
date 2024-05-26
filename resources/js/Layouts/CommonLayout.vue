@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3'
+import { Link, router, useForm } from '@inertiajs/vue3'
+import axios from 'axios'
 
 import TextInput from '@/Components/TextInput.vue'
 
@@ -14,7 +15,13 @@ const form = useForm({
 })
 
 function search() {
-  form.get(route('items.search'))
+  form.get(route('home.search'))
+}
+
+function handleLogout() {
+  axios.post(route('logout')).then(() => {
+    router.visit(route('login'))
+  })
 }
 </script>
 
@@ -40,14 +47,16 @@ function search() {
         <template v-if="$page.props.auth.user">
           <ul class="flex w-full max-w-72 items-center justify-between">
             <li>
-              <Link :href="route('logout')" class="text-white" method="post">ログアウト</Link>
+              <button type="button" class="text-white" @click.prevent="handleLogout">
+                ログアウト
+              </button>
             </li>
             <li>
               <Link :href="route('dashboard')" class="text-white">マイページ</Link>
             </li>
             <li>
               <Link
-                :href="route('items.create')"
+                :href="route('sales.create')"
                 class="rounded-sm bg-white px-4 py-1.5 text-black"
               >
                 出品

@@ -26,7 +26,11 @@ const props = defineProps<{
         <div class="space-y-10">
           <div class="space-y-5">
             <ItemDetailTop :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
-            <PurchaseLink :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
+            <PurchaseLink
+              v-if="item.data.seller.id !== $page.props.auth.user?.id"
+              :item="item.data"
+              :is-authenticated="$page.props.auth.user !== null"
+            />
           </div>
 
           <section>
@@ -45,7 +49,7 @@ const props = defineProps<{
             <ul class="flex gap-x-4">
               <li v-for="category in props.item.data.categories" :key="category">
                 <Link
-                  :href="route('items.search', { q: 'category:' + category })"
+                  :href="route('home.search', { q: 'category:' + category })"
                   class="rounded-full bg-gray-200 px-4 py-0.5 text-sm transition duration-150 ease-in-out hover:bg-gray-300"
                 >
                   {{ category }}
@@ -55,7 +59,7 @@ const props = defineProps<{
             <h4 class="text-base font-bold">商品の状態</h4>
             <div>
               <Link
-                :href="route('items.search', { q: 'condition:' + props.item.data.condition })"
+                :href="route('home.search', { q: 'condition:' + props.item.data.condition })"
                 class="rounded-full bg-gray-200 px-4 py-0.5 text-sm transition duration-150 ease-in-out hover:bg-gray-300"
               >
                 {{ props.item.data.condition }}

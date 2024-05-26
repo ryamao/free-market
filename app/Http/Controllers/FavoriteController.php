@@ -8,21 +8,15 @@ use App\Actions\AddToFavorites;
 use App\Actions\GetFavorites;
 use App\Actions\RemoveFromFavorites;
 use App\Models\Item;
-use Inertia\Inertia;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 final class FavoriteController extends Controller
 {
-    public function index(GetFavorites $action): \Inertia\Response
+    public function index(GetFavorites $action): AnonymousResourceCollection
     {
-        $user = auth()->user();
-        assert($user !== null);
+        assert(auth()->user() !== null);
 
-        $items = $action($user);
-
-        return Inertia::render('Items/Index', [
-            'routeName' => 'mylist.index',
-            'items' => $items,
-        ]);
+        return $action(auth()->user());
     }
 
     public function store(Item $item, AddToFavorites $action): \Illuminate\Http\Response

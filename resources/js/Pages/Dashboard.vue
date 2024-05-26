@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
 
+import ItemList from '@/Components/ItemList.vue'
 import NavLink from '@/Components/NavLink.vue'
 import UserIcon from '@/Components/UserIcon.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
 
-defineProps<{
-  routeName: string
+const props = defineProps<{
+  routeName: 'dashboard' | 'dashboard.purchases'
 }>()
+
+function nextUrl(page: number): string {
+  switch (props.routeName) {
+    case 'dashboard':
+      return route('sales.index', { page })
+    case 'dashboard.purchases':
+      return route('purchases.index', { page })
+  }
+}
 </script>
 
 <template>
@@ -48,7 +58,10 @@ defineProps<{
           </NavLink>
         </li>
         <li>
-          <NavLink :href="route('purchase.index')" :active="routeName === 'purchase.index'">
+          <NavLink
+            :href="route('dashboard.purchases')"
+            :active="routeName === 'dashboard.purchases'"
+          >
             購入した商品
           </NavLink>
         </li>
@@ -56,7 +69,7 @@ defineProps<{
     </nav>
 
     <section class="p-12">
-      <!-- <ItemList :items="items" :next-url="makeNextUrl" /> -->
+      <ItemList :next-url="nextUrl" />
     </section>
   </CommonLayout>
 </template>

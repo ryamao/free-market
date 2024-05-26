@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Condition;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class UsersDashboardTest extends TestCase
+final class SalesCreateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -24,23 +25,16 @@ final class UsersDashboardTest extends TestCase
     }
 
     #[Test]
-    public function マイページにユーザー情報が表示される(): void
+    public function 出品ページにアクセスできる(): void
     {
-        $response = $this->actingAs($this->user)
-            ->get(route('dashboard'));
+        $conditions = Condition::factory(5)->create();
+
+        $response = $this->actingAs($this->user)->get(route('sales.create'));
 
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Dashboard')
-            ->where('routeName', 'dashboard')
+            ->component('Items/Create')
+            ->where('conditions', $conditions->pluck('name')->toArray())
         );
-    }
-
-    #[Test]
-    public function ログインしていない場合はマイページにアクセスできない(): void
-    {
-        $response = $this->get(route('dashboard'));
-
-        $response->assertRedirect(route('login'));
     }
 }

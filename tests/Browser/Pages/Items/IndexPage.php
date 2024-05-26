@@ -35,6 +35,7 @@ final class IndexPage extends Page
         return [
             '@search' => 'header input[type="search"]',
             '@main-nav' => 'main nav ul',
+            '@item-list' => 'main div ul',
         ];
     }
 }

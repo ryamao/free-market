@@ -4,19 +4,21 @@ import { Head } from '@inertiajs/vue3'
 import ItemList from '@/Components/ItemList.vue'
 import NavLink from '@/Components/NavLink.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
-import { Item, Paginator } from '@/types'
 
 const props = defineProps<{
-  routeName: string
-  items: Paginator<Item>
+  routeName: 'home.index' | 'home.search' | 'home.mylist'
   searchString?: string
 }>()
 
-function makeNextUrl(nextPage: number): string {
-  return route(props.routeName, {
-    page: nextPage,
-    q: props.searchString
-  })
+function nextUrl(page: number): string {
+  switch (props.routeName) {
+    case 'home.index':
+      return route('items.index', { page })
+    case 'home.search':
+      return route('items.index', { page, q: props.searchString })
+    case 'home.mylist':
+      return route('favorites.index', { page })
+  }
 }
 </script>
 
@@ -27,17 +29,17 @@ function makeNextUrl(nextPage: number): string {
     <nav class="border-b border-black px-24 pb-1 pt-8">
       <ul class="flex gap-16">
         <li>
-          <NavLink :href="route('items.index')" :active="routeName === 'items.index'">
+          <NavLink :href="route('home.index')" :active="routeName === 'home.index'">
             新着商品
           </NavLink>
         </li>
-        <li v-if="routeName === 'items.search'">
-          <NavLink :href="route('items.search', { q: searchString })" :active="true">
+        <li v-if="routeName === 'home.search'">
+          <NavLink :href="route('home.search', { q: searchString })" :active="true">
             検索結果
           </NavLink>
         </li>
         <li v-if="$page.props.auth.user">
-          <NavLink :href="route('mylist.index')" :active="routeName === 'mylist.index'">
+          <NavLink :href="route('home.mylist')" :active="routeName === 'home.mylist'">
             マイリスト
           </NavLink>
         </li>
@@ -45,7 +47,7 @@ function makeNextUrl(nextPage: number): string {
     </nav>
 
     <div class="p-12">
-      <ItemList :items="items" :next-url="makeNextUrl" />
+      <ItemList :next-url="nextUrl" />
     </div>
   </CommonLayout>
 </template>

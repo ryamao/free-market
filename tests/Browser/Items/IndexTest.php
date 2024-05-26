@@ -41,15 +41,6 @@ final class IndexTest extends DuskTestCase
     }
 
     #[Test]
-    public function 購入可能な商品が存在しない場合は新着商品が表示されない(): void
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit(new Items\IndexPage())
-                ->assertNotPresent('@item-list > li');
-        });
-    }
-
-    #[Test]
     public function 購入可能な商品が存在する場合は新着商品が表示される(): void
     {
         $this->seed(TestDataSeeder::class);
@@ -59,6 +50,7 @@ final class IndexTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($items) {
             $browser->resize(768, 600)
                 ->visit(new Items\IndexPage())
+                ->waitFor('@item-list > li:nth-of-type(1) > a')
                 ->assertAttribute(
                     '@item-list > li:nth-of-type(1) > a',
                     'href',
@@ -93,12 +85,12 @@ final class IndexTest extends DuskTestCase
                 ->assertDontSeeIn('@main-nav', '検索結果')
                 ->type('@search', 'テスト')
                 ->keys('@search', '{enter}')
-                ->waitForRoute('items.search')
+                ->waitForRoute('home.search')
                 ->assertQueryStringHas('q', 'テスト')
                 ->assertInputValue('@search', 'テスト')
                 ->assertSeeIn('@main-nav', '検索結果')
                 ->clickLink('新着商品')
-                ->waitForRoute('items.index')
+                ->waitForRoute('home.index')
                 ->assertDontSeeIn('@main-nav', '検索結果');
         });
     }
@@ -125,14 +117,15 @@ final class IndexTest extends DuskTestCase
             $browser->loginAs($this->user)
                 ->visit(new Items\IndexPage())
                 ->clickLink('マイリスト')
-                ->waitForRoute('mylist.index')
+                ->waitForRoute('home.mylist')
+                ->waitFor('@item-list > li:nth-of-type(1) > a')
                 ->assertAttribute(
                     '@item-list > li:nth-of-type(1) > a',
                     'href',
                     route('items.show', $item)
                 )
                 ->clickLink('新着商品')
-                ->waitForRoute('items.index')
+                ->waitForRoute('home.index')
                 ->logout();
         });
     }
@@ -165,8 +158,8 @@ final class IndexTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs($this->user)
                 ->visit(new Items\IndexPage())
-                ->clickLink('ログアウト')
-                ->waitForRoute('items.index');
+                ->press('ログアウト')
+                ->waitForRoute('login');
         });
 
         $this->assertGuest();

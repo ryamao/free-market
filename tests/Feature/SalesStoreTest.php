@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-final class ItemsStoreTest extends TestCase
+final class SalesStoreTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -37,8 +37,8 @@ final class ItemsStoreTest extends TestCase
         $file = UploadedFile::fake()->image('item.jpg');
 
         $response = $this->actingAs($this->user)
-            ->fromRoute('items.create')
-            ->post(route('items.store'), [
+            ->fromRoute('sales.create')
+            ->post(route('sales.store'), [
                 'name' => '商品名',
                 'image' => $file,
                 'price' => 1000,

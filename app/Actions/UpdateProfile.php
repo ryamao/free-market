@@ -6,7 +6,6 @@ namespace App\Actions;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 final class UpdateProfile
@@ -34,11 +33,7 @@ final class UpdateProfile
 
     private function saveImage(ProfileUpdateRequest $request, User $user): ?string
     {
-        $image = $request->file('image');
-
-        if (is_array($image)) {
-            $image = Arr::first($image);
-        }
+        $image = $request->image;
         if ($image === null) {
             return null;
         }

@@ -5,42 +5,44 @@ import axios from 'axios'
 import { ref } from 'vue'
 
 import ItemCard from '@/Components/ItemCard.vue'
-import { Item, Paginator } from '@/types'
+import { Item } from '@/types'
 
 const props = defineProps<{
-  items: Paginator<Item>
   nextUrl: (nextPage: number) => string
 }>()
 
-const allItems = ref<Item[]>(props.items.data)
-const currentPage = ref<number>(props.items.meta.current_page)
-const lastPage = ref<number>(props.items.meta.last_page)
+const items = ref<Item[]>([])
+const nextPage = ref<number>(1)
+const lastPage = ref<number>(1)
 
-const lastItemRef = ref<HTMLElement | null>(null)
+const listBottomRef = ref<HTMLElement | null>(null)
 
-useIntersectionObserver(lastItemRef, ([{ isIntersecting }]) => {
-  if (!isIntersecting || currentPage.value >= lastPage.value) {
+useIntersectionObserver(listBottomRef, ([{ isIntersecting }]) => {
+  if (!isIntersecting || nextPage.value > lastPage.value) {
     return
   }
 
-  axios.get(props.nextUrl(currentPage.value + 1)).then(({ data }) => {
-    allItems.value = [...allItems.value, ...data.data]
-    currentPage.value = data.meta.current_page
+  let url = props.nextUrl(nextPage.value)
+
+  axios.get(url).then(({ data }) => {
+    items.value.push(...data.data)
+    nextPage.value = data.meta.current_page + 1
     lastPage.value = data.meta.last_page
   })
 })
 </script>
 
 <template>
-  <ul dusk="item-list" class="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-8">
-    <li v-for="item in allItems" :key="item.id">
+  <ul class="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-8">
+    <li v-for="item in items" :key="item.id">
       <Link :href="route('items.show', { item: item })">
         <ItemCard :item="item" />
       </Link>
     </li>
 
-    <li v-if="currentPage < lastPage" ref="lastItemRef">
+    <li v-if="nextPage <= lastPage">
       <ItemCard />
     </li>
   </ul>
+  <div ref="listBottomRef" class="h-1"></div>
 </template>
