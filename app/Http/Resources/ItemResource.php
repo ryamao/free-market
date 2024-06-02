@@ -31,6 +31,7 @@ final class ItemResource extends JsonResource
             'favorite_count' => $this->watchers->count(),
             'is_favorite' => $request->user() ? $this->watchers->contains($request->user()) : false,
             'comment_count' => $this->comments->count(),
+            'is_sold' => $this->isSold(),
             'created_at' => $this->created_at,
         ];
     }

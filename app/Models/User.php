@@ -19,8 +19,9 @@ use Laravel\Cashier\Billable;
  * @property string|null $building
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
- * @property \Illuminate\Support\Collection<\App\Models\Item> $items
- * @property \Illuminate\Support\Collection<\App\Models\Favorite> $favorites
+ * @property-read \Illuminate\Support\Collection<\App\Models\Item> $items
+ * @property-read \Illuminate\Support\Collection<\App\Models\Favorite> $favorites
+ * @property-read \Illuminate\Support\Collection<\App\Models\Purchase> $purchases
  */
 final class User extends Authenticatable
 {
@@ -74,5 +75,11 @@ final class User extends Authenticatable
     public function favorites(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Item::class, 'favorites');
+    }
+
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Purchase> */
+    public function purchases(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Purchase::class);
     }
 }

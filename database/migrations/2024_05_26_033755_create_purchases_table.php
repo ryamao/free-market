@@ -15,11 +15,10 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained();
-            $table->foreignId('user_id')->constrained();
-            $table->string('postcode');
-            $table->string('address');
-            $table->string('building')->nullable();
+            $table->foreignId('item_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('payment_intent_id');
+            $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });
     }

@@ -28,7 +28,7 @@ final class PurchasePage extends Page
     public function assert(Browser $browser): void
     {
         $browser->assertPathIs($this->url());
-        $browser->assertSee($this->item->name);
+        $browser->assertSeeIn('@item-name', $this->item->name);
         $browser->assertSee('¥'.number_format((float) $this->item->price));
     }
 

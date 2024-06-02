@@ -25,6 +25,7 @@ final class PurchaseTest extends DuskTestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
+        $this->user->createAsStripeCustomer();
 
         $item = Item::factory()->create();
         $this->page = new PurchasePage($item);

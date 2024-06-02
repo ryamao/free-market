@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $item_id
  * @property int $user_id
- * @property string $postcode
- * @property string $address
- * @property string|null $building
+ * @property string $payment_intent_id
+ * @property \Illuminate\Support\Carbon|null $paid_at
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property-read \App\Models\Item $item
@@ -27,9 +26,8 @@ final class Purchase extends Model
     protected $fillable = [
         'item_id',
         'user_id',
-        'postcode',
-        'address',
-        'building',
+        'payment_intent_id',
+        'paid_at',
     ];
 
     /** @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Item, self> */
@@ -42,5 +40,20 @@ final class Purchase extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function payment(): ?\Laravel\Cashier\Payment
+    {
+        return $this->user->findPayment($this->payment_intent_id);
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->paid_at !== null;
+    }
+
+    public function markAsPaid(): void
+    {
+        $this->update(['paid_at' => now()]);
     }
 }

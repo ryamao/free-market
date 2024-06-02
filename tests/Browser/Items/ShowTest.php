@@ -28,6 +28,7 @@ final class ShowTest extends DuskTestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
+        $this->user->createAsStripeCustomer();
 
         $seller = User::factory()->create();
         $this->item = Item::factory()
@@ -104,7 +105,7 @@ final class ShowTest extends DuskTestCase
                 ->loginAs($this->user)
                 ->visit($this->page)
                 ->clickLink('購入する')
-                ->waitForRoute('purchase.create', ['item' => $this->item])
+                ->waitForRoute('purchases.create', ['item' => $this->item])
                 ->logout();
         });
     }
