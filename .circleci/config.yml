@@ -18,6 +18,7 @@ jobs:
       - run:
           name: Stripe CLI
           command: docker run --rm -it stripe/stripe-cli listen --forward-to localhost:8000/stripe/webhook --api-key ${STRIPE_SECRET}
+          background: true
       - run:
           name: Remove .env.testing and .env.dusk.testing
           command: rm -f .env.testing .env.dusk.testing
