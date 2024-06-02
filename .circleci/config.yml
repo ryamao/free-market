@@ -13,7 +13,29 @@ jobs:
           MYSQL_PASSWORD: password
     steps:
       - checkout
+      - setup_remote_docker
       - php/install-packages
+      - run:
+          name: Stripe CLI
+          command: docker run --rm -it stripe/stripe-cli listen --forward-to localhost:8000/stripe/webhook --api-key ${STRIPE_SECRET}
+      - run:
+          name: Remove .env.testing and .env.dusk.testing
+          command: rm -f .env.testing .env.dusk.testing
+      - run:
+          name: Copy .env.ci to .env
+          command: cp .env.ci .env
+      - run:
+          name: Add STRIPE_KEY to .env
+          command: echo "STRIPE_KEY=${STRIPE_KEY}" >> .env
+      - run:
+          name: Add STRIPE_SECRET to .env
+          command: echo "STRIPE_SECRET=${STRIPE_SECRET}" >> .env
+      - run:
+          name: Add STRIPE_WEBHOOK_SECRET to .env
+          command: echo "STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}" >> .env
+      - run:
+          name: Add VITE_STRIPE_KEY to .env
+          command: echo "VITE_STRIPE_KEY=${STRIPE_KEY}" >> .env
       - run:
           name: Install node modules
           command: npm ci
@@ -30,12 +52,6 @@ jobs:
               sleep 1
             done
             echo Failed waiting for MySQL && exit 1
-      - run:
-          name: Remove .env.testing and .env.dusk.testing
-          command: rm -f .env.testing .env.dusk.testing
-      - run:
-          name: Copy .env.ci to .env
-          command: cp .env.ci .env
       - run:
           name: Generate key
           command: php artisan key:generate
