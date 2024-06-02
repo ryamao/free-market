@@ -26,8 +26,20 @@ final class ItemController extends Controller
 
     public function show(Item $item): \Inertia\Response
     {
+        $payment = null;
+        if (auth()->check()) {
+            $purchase = $item->purchases()->firstWhere('user_id', auth()->id());
+            if ($purchase) {
+                $payment = [
+                    'status' => $purchase->payment_status,
+                    'clientSecret' => $purchase->client_secret,
+                ];
+            }
+        }
+
         return Inertia::render('Items/Show', [
             'item' => ItemResource::make($item),
+            'payment' => $payment,
         ]);
     }
 }

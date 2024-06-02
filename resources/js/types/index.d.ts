@@ -22,6 +22,7 @@ export interface Item {
   favorite_count: number
   is_favorite: boolean
   comment_count: number
+  is_sold: boolean
   created_at: string
 }
 

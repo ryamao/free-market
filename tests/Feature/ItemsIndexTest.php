@@ -45,8 +45,6 @@ final class ItemsIndexTest extends TestCase
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
         $count = $items->count();
 
-        // 7つのテーブルからデータを取得する
-        // items, sellers, conditions, categories, item_category, favorites, comments
         $this->expectsDatabaseQueryCount(7);
 
         $response = $this->getJson(route('items.index'));

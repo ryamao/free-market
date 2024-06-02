@@ -12,7 +12,7 @@ defineProps<{
 <template>
   <Link
     v-if="isAuthenticated"
-    :href="route('purchase.create', { item: item })"
+    :href="route('purchases.create', { item: item })"
     class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-emerald-600 px-4 py-0.5 text-lg font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-emerald-700 focus:bg-emerald-700 active:bg-emerald-800"
   >
     購入する

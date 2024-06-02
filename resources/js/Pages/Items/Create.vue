@@ -65,7 +65,7 @@ async function createNewItem() {
 
   form.image = await imageCompression(form.image, { maxSizeMB: 1, maxWidthOrHeight: 1024 })
 
-  form.post('/items', {
+  form.post(route('sales.create'), {
     onError: () => {
       confirmingItemCreation.value = false
       alert('商品の出品に失敗しました')
