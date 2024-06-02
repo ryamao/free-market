@@ -6,7 +6,7 @@ namespace App\Listeners;
 
 use App\Models\Item;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 use Laravel\Cashier\Events\WebhookReceived;
 
 final class StripeEventListener
@@ -26,43 +26,61 @@ final class StripeEventListener
     {
         switch ($event->payload['type']) {
             case 'payment_intent.requires_action':
-                $this->markAsPaid($event->payload['data']['object']);
+                $this->handlePaid($event, 'requires_action');
                 break;
             case 'payment_intent.succeeded':
-                $this->markAsPaid($event->payload['data']['object']);
+                $this->handlePaid($event, 'succeeded');
                 break;
             default:
                 break;
         }
     }
 
-    // @phpstan-ignore-next-line
-    private function markAsPaid(array $paymentIntent): void
+    private function handlePaid(WebhookReceived $event, string $status): void
     {
-        $item = Item::firstWhere('id', $paymentIntent['metadata']['item_id']);
-        if ($item === null) {
-            Log::error('Item not found', ['item_id' => $paymentIntent['metadata']['item_id']]);
+        $paymentIntent = $event->payload['data']['object'];
 
-            return;
-        }
+        $item = $this->findItem($paymentIntent['metadata']['item_id']);
+        $user = $this->findUser($paymentIntent['customer']);
+        $purchase = $this->findPurchase($user, $item);
+
+        $purchase->setPaymentStatus($status);
+
         if ($item->isSold()) {
             return;
         }
 
-        $user = User::firstWhere('stripe_id', $paymentIntent['customer']);
-        if ($user === null) {
-            Log::error('User not found', ['stripe_id' => $paymentIntent['customer']]);
+        $item->markAsSold($purchase->paid_at);
+        $purchase->markAsPaid();
+    }
 
-            return;
+    private function findItem(string $itemId): \App\Models\Item
+    {
+        $item = Item::firstWhere('id', $itemId);
+        if ($item === null) {
+            throw new InvalidArgumentException("Item not found with ID: $itemId");
         }
 
+        return $item;
+    }
+
+    private function findUser(string $stripeId): \App\Models\User
+    {
+        $user = User::firstWhere('stripe_id', $stripeId);
+        if ($user === null) {
+            throw new InvalidArgumentException("User not found with Stripe ID: $stripeId");
+        }
+
+        return $user;
+    }
+
+    private function findPurchase(\App\Models\User $user, \App\Models\Item $item): \App\Models\Purchase
+    {
         $purchase = $item->purchases()->firstWhere('user_id', $user->id);
         if ($purchase === null) {
-            Log::error('Purchase not found', ['item_id' => $item->id, 'user_id' => $user->id]);
-
-            return;
+            throw new InvalidArgumentException("Purchase not found for user ID: {$user->id} and item ID: {$item->id}");
         }
 
-        $purchase->markAsPaid();
+        return $purchase;
     }
 }

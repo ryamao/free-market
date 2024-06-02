@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('item_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('payment_intent_id');
+            $table->string('payment_status');
+            $table->string('client_secret');
             $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });

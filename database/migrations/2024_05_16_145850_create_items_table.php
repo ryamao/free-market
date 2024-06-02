@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('image_url');
             $table->text('description');
             $table->unsignedInteger('price');
+            $table->dateTime('sold_at')->nullable();
             $table->timestamps();
         });
     }

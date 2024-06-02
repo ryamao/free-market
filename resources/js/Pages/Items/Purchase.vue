@@ -33,7 +33,7 @@ function mountPaymentElement(elements: StripeElements) {
 
 function mountAddressElement(elements: StripeElements) {
   const user = page.props.auth.user
-  const postalCode = `${user.postcode.slice(0, 3)}-${user.postcode.slice(3)}`
+  const postalCode = user.postcode ? `${user.postcode.slice(0, 3)}-${user.postcode.slice(3)}` : null
   const addressElement = elements.create('address', {
     mode: 'shipping',
     defaultValues: {
@@ -122,7 +122,7 @@ onMounted(async () => {
       <div>
         <PrimaryButton
           type="button"
-          class="w-full py-0.5"
+          class="w-full py-1.5"
           :class="{ 'opacity-25': paymentProcessing }"
           :disabled="paymentProcessing"
           @click.prevent="handleSubmit"

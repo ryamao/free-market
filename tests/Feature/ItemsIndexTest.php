@@ -45,6 +45,8 @@ final class ItemsIndexTest extends TestCase
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
         $count = $items->count();
 
+        $this->expectsDatabaseQueryCount(7);
+
         $response = $this->getJson(route('items.index'));
 
         $response->assertStatus(200);
@@ -77,6 +79,8 @@ final class ItemsIndexTest extends TestCase
         $this->seed(TestDataSeeder::class);
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
 
+        $this->expectsDatabaseQueryCount(7);
+
         $response = $this->getJson(route('items.index', ['page' => 2]));
 
         $response->assertStatus(200);
@@ -108,6 +112,8 @@ final class ItemsIndexTest extends TestCase
         $items = Item::orderByDesc('created_at')->orderBy('name')->get();
         $count = $items->count();
         $lastPage = (int) ceil($count / 10);
+
+        $this->expectsDatabaseQueryCount(7);
 
         $response = $this->getJson(route('items.index', ['page' => $lastPage]));
 

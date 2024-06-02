@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
+import { loadStripe } from '@stripe/stripe-js'
 
 import ItemDetailTop from '@/Components/ItemDetailTop.vue'
 import PurchaseLink from '@/Components/PurchaseLink.vue'
@@ -10,7 +11,24 @@ const props = defineProps<{
   item: {
     data: Item
   }
+  payment: {
+    status: string
+    clientSecret: string
+  } | null
 }>()
+
+async function handleNextAction() {
+  if (props.payment?.status !== 'requires_action') {
+    return
+  }
+
+  const stripe = await loadStripe(import.meta.env.VITE_STRIPE_KEY)
+  if (!stripe) {
+    return
+  }
+
+  await stripe.handleNextAction({ clientSecret: props.payment.clientSecret })
+}
 </script>
 
 <template>
@@ -26,11 +44,21 @@ const props = defineProps<{
         <div class="space-y-10">
           <div class="space-y-5">
             <ItemDetailTop :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
-            <PurchaseLink
-              v-if="item.data.seller.id !== $page.props.auth.user?.id"
-              :item="item.data"
-              :is-authenticated="$page.props.auth.user !== null"
-            />
+            <template v-if="item.data.seller.id !== $page.props.auth.user?.id">
+              <PurchaseLink
+                v-if="!item.data.is_sold"
+                :item="item.data"
+                :is-authenticated="$page.props.auth.user !== null"
+              />
+              <button
+                v-else-if="payment?.status === 'requires_action'"
+                type="button"
+                class="inline-flex w-full items-center justify-center rounded-md border-2 border-emerald-600 bg-white py-0.5 text-lg font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
+                @click.prevent="handleNextAction"
+              >
+                支払いを完了する
+              </button>
+            </template>
           </div>
 
           <section>

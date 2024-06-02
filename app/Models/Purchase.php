@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $item_id
  * @property int $user_id
  * @property string $payment_intent_id
+ * @property string $payment_status
+ * @property string $client_secret
  * @property \Illuminate\Support\Carbon|null $paid_at
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
@@ -27,6 +29,8 @@ final class Purchase extends Model
         'item_id',
         'user_id',
         'payment_intent_id',
+        'payment_status',
+        'client_secret',
         'paid_at',
     ];
 
@@ -55,5 +59,10 @@ final class Purchase extends Model
     public function markAsPaid(): void
     {
         $this->update(['paid_at' => now()]);
+    }
+
+    public function setPaymentStatus(string $status): void
+    {
+        $this->update(['payment_status' => $status]);
     }
 }

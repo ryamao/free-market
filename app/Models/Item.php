@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $image_url
  * @property string $description
  * @property int $price
+ * @property \Illuminate\Support\Carbon|null $sold_at
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \App\Models\User $seller
@@ -27,7 +28,15 @@ final class Item extends Model
     use HasFactory;
 
     /** @var list<string> */
-    protected $fillable = ['seller_id', 'condition_id', 'name', 'image_url', 'description', 'price'];
+    protected $fillable = [
+        'seller_id',
+        'condition_id',
+        'name',
+        'image_url',
+        'description',
+        'price',
+        'sold_at',
+    ];
 
     /** @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, self> */
     public function seller(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -67,6 +76,12 @@ final class Item extends Model
 
     public function isSold(): bool
     {
-        return $this->purchases()->whereNotNull('paid_at')->exists();
+        return $this->sold_at !== null;
+    }
+
+    public function markAsSold(?\Illuminate\Support\Carbon $soldAt): void
+    {
+        $soldAt ??= now();
+        $this->update(['sold_at' => $soldAt]);
     }
 }
