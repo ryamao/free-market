@@ -28,6 +28,7 @@ final class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'postcode' => fake()->postcode(),
+            'prefecture' => fake()->city(),
             'address' => fake()->address(),
             'building' => fake()->buildingNumber(),
             'email' => fake()->unique()->safeEmail(),

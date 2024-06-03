@@ -41,6 +41,7 @@ function mountAddressElement(elements: StripeElements) {
       address: {
         country: 'JP',
         postal_code: postalCode,
+        state: user.prefecture,
         line1: user.address,
         line2: user.building
       }

@@ -34,6 +34,7 @@ final class ProfileUpdateTest extends TestCase
                 'name' => 'updated name',
                 'image' => UploadedFile::fake()->image('image.jpg'),
                 'postcode' => '1234567',
+                'prefecture' => 'updated prefecture',
                 'address' => 'updated address',
                 'building' => 'updated building name',
             ]);
@@ -44,6 +45,7 @@ final class ProfileUpdateTest extends TestCase
             'id' => $this->user->id,
             'name' => 'updated name',
             'postcode' => '1234567',
+            'prefecture' => 'updated prefecture',
             'address' => 'updated address',
             'building' => 'updated building name',
         ]);

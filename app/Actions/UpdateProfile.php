@@ -19,6 +19,7 @@ final class UpdateProfile
         $user->fill($request->only([
             'name',
             'postcode',
+            'prefecture',
             'address',
             'building',
         ]));
