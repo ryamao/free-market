@@ -40,36 +40,42 @@ onChange((files) => {
   }
 })
 
-function onUpdatePostcode(value: string) {
-  if (!/^\d{7}$/.test(value)) {
+async function onUpdatePostcode(value: string) {
+  if (!/^\d{3}-?\d{4}$/.test(value)) {
     return
   }
 
-  fetch(`https://postcode.teraren.com/postcodes/${value}.json`).then((response) => {
-    if (!response.ok) {
-      return
-    }
+  value = value.replace('-', '')
 
-    response.json().then((data) => {
-      form.prefecture = ''
-      if (data.prefecture) {
-        form.prefecture = data.prefecture
-      }
+  const response = await fetch(`https://postcode.teraren.com/postcodes/${value}.json`)
+  if (!response.ok) {
+    return
+  }
 
-      form.address = ''
-      if (data.city) {
-        form.address += data.city
-      }
-      if (data.suburb) {
-        form.address += data.suburb
-      }
-    })
-  })
+  const data = await response.json()
+
+  form.prefecture = ''
+  form.address = ''
+  form.building = ''
+
+  if (data.prefecture) {
+    form.prefecture = data.prefecture
+  }
+  if (data.city) {
+    form.address += data.city
+  }
+  if (data.suburb) {
+    form.address += data.suburb
+  }
 }
 
 async function submit() {
   if (form.image) {
     form.image = await imageCompression(form.image, { maxSizeMB: 1, maxWidthOrHeight: 480 })
+  }
+
+  if (form.postcode) {
+    form.postcode = form.postcode.replace('-', '')
   }
 
   form.post(route('profile.update'), {
@@ -174,8 +180,7 @@ const prefectures = [
               id="postcode"
               v-model="form.postcode"
               type="text"
-              pattern="\d{7}"
-              title="7桁の数字で入力してください"
+              pattern="\d{3}-?\d{4}"
               class="mt-1 block w-full"
               @update:model-value="onUpdatePostcode"
             />
