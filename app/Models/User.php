@@ -15,6 +15,7 @@ use Laravel\Cashier\Billable;
  * @property string|null $name
  * @property string|null $image_url
  * @property string|null $postcode
+ * @property string|null $prefecture
  * @property string|null $address
  * @property string|null $building
  * @property \Illuminate\Support\Carbon $created_at
@@ -38,6 +39,7 @@ final class User extends Authenticatable
         'name',
         'image_url',
         'postcode',
+        'prefecture',
         'address',
         'building',
     ];

@@ -21,6 +21,7 @@ final class ProfileResource extends JsonResource
     {
         return [
             'postcode' => $this->postcode,
+            'prefecture' => $this->prefecture,
             'address' => $this->address,
             'building' => $this->building,
         ];

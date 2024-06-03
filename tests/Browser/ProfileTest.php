@@ -38,8 +38,9 @@ final class ProfileTest extends DuskTestCase
                 ->assertSeeIn('button', '画像を選択する')
                 ->assertSeeIn('@name-label', 'ユーザー名')
                 ->assertSeeIn('@postcode-label', '郵便番号')
-                ->assertSeeIn('@address-label', '住所')
-                ->assertSeeIn('@building-label', '建物名')
+                ->assertSeeIn('@prefecture-label', '都道府県')
+                ->assertSeeIn('@address-label', '市区町村など')
+                ->assertSeeIn('@building-label', '建物名、部屋番号など')
                 ->assertInputValue('@name-input', $this->user->name ?? '')
                 ->assertInputValue('@postcode-input', $this->user->postcode ?? '')
                 ->assertInputValue('@address-input', $this->user->address ?? '')
@@ -58,6 +59,7 @@ final class ProfileTest extends DuskTestCase
                 ->visit($this->page)
                 ->type('@name-input', 'updated name')
                 ->type('@postcode-input', '1234567')
+                ->select('@prefecture-select', '東京都')
                 ->type('@address-input', 'updated address')
                 ->type('@building-input', 'updated building name')
                 ->press('更新する')
@@ -69,6 +71,7 @@ final class ProfileTest extends DuskTestCase
             'id' => $this->user->id,
             'name' => 'updated name',
             'postcode' => '1234567',
+            'prefecture' => '東京都',
             'address' => 'updated address',
             'building' => 'updated building name',
         ]);

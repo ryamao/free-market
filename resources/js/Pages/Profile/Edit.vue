@@ -21,6 +21,7 @@ const form = useForm({
   image: null as File | null,
   name: page.props.auth.user.name ?? '',
   postcode: page.props.auth.user.postcode ?? '',
+  prefecture: page.props.auth.user.prefecture ?? '',
   address: page.props.auth.user.address ?? '',
   building: page.props.auth.user.building ?? ''
 })
@@ -39,34 +40,42 @@ onChange((files) => {
   }
 })
 
-function onUpdatePostcode(value: string) {
-  if (form.address !== '' || !/^\d{7}$/.test(value)) {
+async function onUpdatePostcode(value: string) {
+  if (!/^\d{3}-?\d{4}$/.test(value)) {
     return
   }
 
-  fetch(`https://postcode.teraren.com/postcodes/${value}.json`).then((response) => {
-    if (!response.ok) {
-      return
-    }
+  value = value.replace('-', '')
 
-    response.json().then((data) => {
-      form.address = ''
-      if (data.prefecture) {
-        form.address = data.prefecture
-      }
-      if (data.city) {
-        form.address += data.city
-      }
-      if (data.suburb) {
-        form.address += data.suburb
-      }
-    })
-  })
+  const response = await fetch(`https://postcode.teraren.com/postcodes/${value}.json`)
+  if (!response.ok) {
+    return
+  }
+
+  const data = await response.json()
+
+  form.prefecture = ''
+  form.address = ''
+  form.building = ''
+
+  if (data.prefecture) {
+    form.prefecture = data.prefecture
+  }
+  if (data.city) {
+    form.address += data.city
+  }
+  if (data.suburb) {
+    form.address += data.suburb
+  }
 }
 
 async function submit() {
   if (form.image) {
     form.image = await imageCompression(form.image, { maxSizeMB: 1, maxWidthOrHeight: 480 })
+  }
+
+  if (form.postcode) {
+    form.postcode = form.postcode.replace('-', '')
   }
 
   form.post(route('profile.update'), {
@@ -75,6 +84,56 @@ async function submit() {
     }
   })
 }
+
+const prefectures = [
+  '北海道',
+  '青森県',
+  '岩手県',
+  '宮城県',
+  '秋田県',
+  '山形県',
+  '福島県',
+  '茨城県',
+  '栃木県',
+  '群馬県',
+  '埼玉県',
+  '千葉県',
+  '東京都',
+  '神奈川県',
+  '新潟県',
+  '富山県',
+  '石川県',
+  '福井県',
+  '山梨県',
+  '長野県',
+  '岐阜県',
+  '静岡県',
+  '愛知県',
+  '三重県',
+  '滋賀県',
+  '京都府',
+  '大阪府',
+  '兵庫県',
+  '奈良県',
+  '和歌山県',
+  '鳥取県',
+  '島根県',
+  '岡山県',
+  '広島県',
+  '山口県',
+  '徳島県',
+  '香川県',
+  '愛媛県',
+  '高知県',
+  '福岡県',
+  '佐賀県',
+  '長崎県',
+  '熊本県',
+  '大分県',
+  '宮崎県',
+  '鹿児島県',
+  '沖縄県'
+]
 </script>
 
 <template>
@@ -121,8 +180,7 @@ async function submit() {
               id="postcode"
               v-model="form.postcode"
               type="text"
-              pattern="\d{7}"
-              title="7桁の数字で入力してください"
+              pattern="\d{3}-?\d{4}"
               class="mt-1 block w-full"
               @update:model-value="onUpdatePostcode"
             />
@@ -130,13 +188,28 @@ async function submit() {
           </div>
 
           <div>
-            <InputLabel for="address" value="住所" />
+            <InputLabel for="prefecture" value="都道府県" />
+            <select
+              id="prefecture"
+              v-model="form.prefecture"
+              class="mt-1 block w-full rounded-md border-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
+            >
+              <option value="" disabled>都道府県を選択してください</option>
+              <option v-for="prefecture in prefectures" :key="prefecture" :value="prefecture">
+                {{ prefecture }}
+              </option>
+            </select>
+            <InputError class="mt-2" :message="form.errors.address" />
+          </div>
+
+          <div>
+            <InputLabel for="address" value="市区町村など" />
             <TextInput id="address" v-model="form.address" type="text" class="mt-1 block w-full" />
             <InputError class="mt-2" :message="form.errors.address" />
           </div>
 
           <div>
-            <InputLabel for="building" value="建物名" />
+            <InputLabel for="building" value="建物名、部屋番号など" />
             <TextInput
               id="building"
               v-model="form.building"

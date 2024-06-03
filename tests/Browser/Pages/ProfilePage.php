@@ -36,10 +36,12 @@ final class ProfilePage extends Page
             '@title' => 'h2',
             '@name-label' => 'label[for="name"]',
             '@postcode-label' => 'label[for="postcode"]',
+            '@prefecture-label' => 'label[for="prefecture"]',
             '@address-label' => 'label[for="address"]',
             '@building-label' => 'label[for="building"]',
             '@name-input' => 'input[id="name"]',
             '@postcode-input' => 'input[id="postcode"]',
+            '@prefecture-select' => 'select[id="prefecture"]',
             '@address-input' => 'input[id="address"]',
             '@building-input' => 'input[id="building"]',
         ];

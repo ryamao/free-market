@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('image_url')->nullable();
             $table->string('postcode')->nullable();
+            $table->string('prefecture')->nullable();
             $table->string('address')->nullable();
             $table->string('building')->nullable();
             $table->rememberToken();

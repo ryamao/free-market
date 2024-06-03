@@ -44,6 +44,7 @@ final class ProfileEditTest extends TestCase
             ->has('profile', fn (AssertableInertia $page) => $page
                 ->has('data', fn (AssertableInertia $page) => $page
                     ->where('postcode', $this->user->postcode)
+                    ->where('prefecture', $this->user->prefecture)
                     ->where('address', $this->user->address)
                     ->where('building', $this->user->building)
                 )

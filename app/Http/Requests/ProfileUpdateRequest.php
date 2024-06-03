@@ -10,6 +10,7 @@ use Stringable;
 /**
  * @property-read string $name
  * @property-read string|null $postcode
+ * @property-read string|null $prefecture
  * @property-read string|null $address
  * @property-read string|null $building
  * @property-read \Illuminate\Http\UploadedFile|null $image
@@ -28,6 +29,7 @@ final class ProfileUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'postcode' => ['nullable', 'string', 'digits:7'],
+            'prefecture' => ['nullable', 'string', 'max:255'],
             'address' => ['nullable', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],
             'image' => ['nullable', 'image', 'max:2048'],
