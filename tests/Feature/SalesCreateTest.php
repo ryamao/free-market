@@ -29,7 +29,8 @@ final class SalesCreateTest extends TestCase
     {
         $conditions = Condition::factory(5)->create();
 
-        $response = $this->actingAs($this->user)->get(route('sales.create'));
+        $this->actingAs($this->user);
+        $response = $this->get(route('sales.create'));
 
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page

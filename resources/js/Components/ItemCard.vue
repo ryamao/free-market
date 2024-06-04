@@ -18,7 +18,12 @@ defineProps<{
       <div class="space-y-1 p-1">
         <h3 class="text-lg font-bold">{{ item.name }}</h3>
         <div class="flex items-center justify-between">
-          <span class="text-base">¥{{ item.price.toLocaleString() }}</span>
+          <span class="space-x-2 text-base">
+            <span :class="{ 'line-through': item.is_sold }"
+              >¥{{ item.price.toLocaleString() }}</span
+            >
+            <span v-if="item.is_sold" class="text-sm text-gray-500">(販売終了)</span>
+          </span>
           <div class="flex items-center gap-x-2">
             <div class="flex items-center gap-x-0.5">
               <FavoriteIcon

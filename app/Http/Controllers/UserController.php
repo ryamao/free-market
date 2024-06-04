@@ -10,8 +10,6 @@ final class UserController extends Controller
 {
     public function dashboard(): \Inertia\Response
     {
-        return Inertia::render('Dashboard', [
-            'routeName' => 'dashboard',
-        ]);
+        return Inertia::render('Dashboard');
     }
 }

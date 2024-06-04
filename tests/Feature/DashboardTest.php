@@ -32,7 +32,6 @@ final class DashboardTest extends TestCase
         $response->assertStatus(200);
         $response->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Dashboard')
-            ->where('routeName', 'dashboard')
         );
     }
 

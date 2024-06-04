@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Http\Resources\ItemResource;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-final class GetItemsForSale
+final class GetPurchasedItems
 {
-    public function __invoke(Request $request): AnonymousResourceCollection
+    public function __invoke(User $user): AnonymousResourceCollection
     {
-        assert($request->user() !== null);
-
-        $items = $request->user()
-            ->items()
+        $items = $user->purchasedItems()
             ->with(['seller', 'condition', 'categories', 'watchers', 'comments'])
             ->orderByDesc('created_at')
             ->orderBy('name')
