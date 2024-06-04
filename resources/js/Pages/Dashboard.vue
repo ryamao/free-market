@@ -1,23 +1,13 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
+import { ref } from 'vue'
 
 import ItemList from '@/Components/ItemList.vue'
-import NavLink from '@/Components/NavLink.vue'
+import NavButton from '@/Components/NavButton.vue'
 import UserIcon from '@/Components/UserIcon.vue'
 import CommonLayout from '@/Layouts/CommonLayout.vue'
 
-const props = defineProps<{
-  routeName: 'dashboard' | 'dashboard.purchases'
-}>()
-
-function nextUrl(page: number): string {
-  switch (props.routeName) {
-    case 'dashboard':
-      return route('sales.index', { page })
-    case 'dashboard.purchases':
-      return route('purchases.index', { page })
-  }
-}
+const tabName = ref<'sales' | 'purchases'>('sales')
 </script>
 
 <template>
@@ -53,23 +43,24 @@ function nextUrl(page: number): string {
     <nav class="border-b border-black px-24 pb-1">
       <ul class="flex gap-16">
         <li>
-          <NavLink :href="route('dashboard')" :active="routeName === 'dashboard'">
+          <NavButton :active="tabName === 'sales'" @click="() => (tabName = 'sales')">
             出品した商品
-          </NavLink>
+          </NavButton>
         </li>
         <li>
-          <NavLink
-            :href="route('dashboard.purchases')"
-            :active="routeName === 'dashboard.purchases'"
-          >
+          <NavButton :active="tabName === 'purchases'" @click="() => (tabName = 'purchases')">
             購入した商品
-          </NavLink>
+          </NavButton>
         </li>
       </ul>
     </nav>
 
     <section class="p-12">
-      <ItemList :next-url="nextUrl" />
+      <ItemList v-if="tabName === 'sales'" :next-url="(page) => route('sales.index', { page })" />
+      <ItemList
+        v-else-if="tabName === 'purchases'"
+        :next-url="(page) => route('purchases.index', { page })"
+      />
     </section>
   </CommonLayout>
 </template>

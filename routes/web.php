@@ -11,7 +11,6 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // トップページ
 
@@ -47,8 +46,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/mypage/purchases', fn () => Inertia::render('Dashboard', ['routeName' => 'dashboard.purchases']))->name('dashboard.purchases');
     Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
+    Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
 });
 
 // プロフィール編集ページ
