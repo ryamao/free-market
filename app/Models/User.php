@@ -23,6 +23,7 @@ use Laravel\Cashier\Billable;
  * @property-read \Illuminate\Support\Collection<\App\Models\Item> $items
  * @property-read \Illuminate\Support\Collection<\App\Models\Favorite> $favorites
  * @property-read \Illuminate\Support\Collection<\App\Models\Purchase> $purchases
+ * @property-read \Illuminate\Support\Collection<\App\Models\Item> $purchasedItems
  */
 final class User extends Authenticatable
 {
@@ -83,5 +84,11 @@ final class User extends Authenticatable
     public function purchases(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Item> */
+    public function purchasedItems(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Item::class, 'purchases')->whereNotNull('paid_at');
     }
 }
