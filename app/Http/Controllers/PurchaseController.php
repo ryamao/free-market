@@ -17,14 +17,14 @@ final class PurchaseController extends Controller
 {
     public function index(Request $request, GetPurchasedItems $action): AnonymousResourceCollection
     {
-        assert($request->user() !== null);
+        assert($request->user() instanceof \App\Models\User);
 
         return $action($request->user());
     }
 
     public function create(Request $request, Item $item, PreparePayment $action): \Inertia\Response|RedirectResponse
     {
-        assert($request->user() !== null);
+        assert($request->user() instanceof \App\Models\User);
 
         if ($item->isSold()) {
             return redirect()->route('items.show', $item);

@@ -25,7 +25,7 @@ final class CommentController extends Controller
 
     public function store(CommentsStoreRequest $request, Item $item, AddComment $action): \Illuminate\Http\Response
     {
-        assert($request->user() !== null);
+        assert($request->user() instanceof \App\Models\User);
 
         $action($request->user(), $item, $request->content);
 

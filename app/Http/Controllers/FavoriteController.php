@@ -8,23 +8,23 @@ use App\Actions\AddToFavorites;
 use App\Actions\GetFavorites;
 use App\Actions\RemoveFromFavorites;
 use App\Models\Item;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 final class FavoriteController extends Controller
 {
-    public function index(GetFavorites $action): AnonymousResourceCollection
+    public function index(Request $request, GetFavorites $action): AnonymousResourceCollection
     {
-        assert(auth()->user() !== null);
+        assert($request->user() instanceof \App\Models\User);
 
-        return $action(auth()->user());
+        return $action($request->user());
     }
 
-    public function store(Item $item, AddToFavorites $action): \Illuminate\Http\Response
+    public function store(Request $request, Item $item, AddToFavorites $action): \Illuminate\Http\Response
     {
-        $user = auth()->user();
-        assert($user !== null);
+        assert($request->user() instanceof \App\Models\User);
 
-        $success = $action($user, $item);
+        $success = $action($request->user(), $item);
 
         if ($success) {
             return response(status: 201);
@@ -33,12 +33,11 @@ final class FavoriteController extends Controller
         }
     }
 
-    public function destroy(Item $item, RemoveFromFavorites $action): \Illuminate\Http\Response
+    public function destroy(Request $request, Item $item, RemoveFromFavorites $action): \Illuminate\Http\Response
     {
-        $user = auth()->user();
-        assert($user !== null);
+        assert($request->user() instanceof \App\Models\User);
 
-        $success = $action($user, $item);
+        $success = $action($request->user(), $item);
 
         if ($success) {
             return response(status: 204);
