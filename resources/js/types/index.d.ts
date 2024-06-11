@@ -60,5 +60,6 @@ export interface Paginator<T> {
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
   auth: {
     user: User
+    admin: Admin
   }
 }
