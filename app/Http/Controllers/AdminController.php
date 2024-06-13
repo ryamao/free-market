@@ -40,7 +40,7 @@ final class AdminController extends Controller
 
     public function index(): \Inertia\Response
     {
-        $users = User::all();
+        $users = User::whereNull('deleted_at')->get();
 
         return Inertia::render('Admin/Index', [
             'users' => UserResource::collection($users),

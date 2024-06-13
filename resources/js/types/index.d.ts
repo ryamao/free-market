@@ -2,6 +2,7 @@ export interface UserData {
   id: number
   name: ?string
   image_url: ?string
+  is_deleted: boolean
 }
 
 export interface Profile {

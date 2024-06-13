@@ -20,6 +20,7 @@ use Laravel\Cashier\Billable;
  * @property string|null $building
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Support\Collection<\App\Models\Item> $items
  * @property-read \Illuminate\Support\Collection<\App\Models\Favorite> $favorites
  * @property-read \Illuminate\Support\Collection<\App\Models\Purchase> $purchases
@@ -43,6 +44,7 @@ final class User extends Authenticatable
         'prefecture',
         'address',
         'building',
+        'deleted_at',
     ];
 
     /**
@@ -66,6 +68,16 @@ final class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function markAsDeleted(): void
+    {
+        $this->update(['deleted_at' => now()]);
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted_at !== null;
     }
 
     /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Item> */

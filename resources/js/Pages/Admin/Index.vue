@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
+import axios from 'axios'
 
 import DangerButton from '@/Components/DangerButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -17,8 +18,17 @@ function sendEmail(user: UserData) {
   alert(JSON.stringify(user))
 }
 
-function deleteUser(user: UserData) {
-  alert(JSON.stringify(user))
+async function deleteUser(user: UserData) {
+  if (!confirm(`ユーザー「${user.name}」を削除します`)) {
+    return
+  }
+
+  const response = await axios.delete(route('users.destroy', { user: user.id }))
+  if (response.status === 204) {
+    router.reload()
+  } else {
+    alert('ユーザーの削除に失敗しました\n' + response.data.message)
+  }
 }
 </script>
 
