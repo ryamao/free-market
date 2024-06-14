@@ -17,7 +17,7 @@ final class SaleController extends Controller
 {
     public function index(Request $request, GetItemsBySeller $action): AnonymousResourceCollection
     {
-        assert($request->user() !== null);
+        assert($request->user() instanceof \App\Models\User);
 
         return $action($request->user());
     }
@@ -33,7 +33,9 @@ final class SaleController extends Controller
 
     public function store(ItemsStoreRequest $request, CreateNewItem $action): RedirectResponse
     {
-        $action($request);
+        assert($request->user() instanceof \App\Models\User);
+
+        $action($request, $request->user());
 
         return redirect()->route('dashboard');
     }

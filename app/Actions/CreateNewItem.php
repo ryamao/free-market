@@ -8,17 +8,15 @@ use App\Http\Requests\ItemsStoreRequest;
 use App\Models\Category;
 use App\Models\Condition;
 use App\Models\Item;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 final class CreateNewItem
 {
-    public function __invoke(ItemsStoreRequest $request): void
+    public function __invoke(ItemsStoreRequest $request, User $user): void
     {
-        assert($request->user() !== null);
-        $user = $request->user();
-
         $condition = Condition::where('name', $request->condition)->firstOrFail();
 
         $item = $user->items()->create([

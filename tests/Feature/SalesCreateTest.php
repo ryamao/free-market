@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Models\Condition;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
@@ -27,7 +28,9 @@ final class SalesCreateTest extends TestCase
     #[Test]
     public function 出品ページにアクセスできる(): void
     {
-        $conditions = Condition::factory(5)->create();
+        $conditions = Condition::factory(5)
+            ->sequence(fn (Sequence $seq) => ['name' => 'condition '.$seq->index])
+            ->create();
 
         $this->actingAs($this->user);
         $response = $this->get(route('sales.create'));

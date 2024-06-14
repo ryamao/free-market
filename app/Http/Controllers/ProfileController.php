@@ -20,7 +20,7 @@ final class ProfileController extends Controller
      */
     public function edit(Request $request): \Inertia\Response
     {
-        assert($request->user() !== null);
+        assert($request->user() instanceof \App\Models\User);
 
         return Inertia::render('Profile/Edit', [
             'user' => UserResource::make($request->user()),
@@ -33,7 +33,9 @@ final class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request, UpdateProfile $action): RedirectResponse
     {
-        $action($request);
+        assert($request->user() instanceof \App\Models\User);
+
+        $action($request, $request->user());
 
         return Redirect::route('dashboard');
     }

@@ -39,6 +39,7 @@ final class ProfileEditTest extends TestCase
                     ->where('id', $this->user->id)
                     ->where('name', $this->user->name)
                     ->where('image_url', $this->user->image_url)
+                    ->where('is_deleted', false)
                 )
             )
             ->has('profile', fn (AssertableInertia $page) => $page

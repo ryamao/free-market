@@ -10,12 +10,8 @@ use Illuminate\Support\Facades\Storage;
 
 final class UpdateProfile
 {
-    public function __invoke(ProfileUpdateRequest $request): void
+    public function __invoke(ProfileUpdateRequest $request, User $user): void
     {
-        assert($request->user() !== null);
-
-        $user = $request->user();
-
         $user->fill($request->only([
             'name',
             'postcode',

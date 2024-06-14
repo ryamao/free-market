@@ -18,7 +18,13 @@ function search() {
   form.get(route('home.search'))
 }
 
-function handleLogout() {
+function handleAdminLogout() {
+  axios.post(route('admin.logout')).then(() => {
+    router.visit(route('admin.login'))
+  })
+}
+
+function handleUserLogout() {
   axios.post(route('logout')).then(() => {
     router.visit(route('login'))
   })
@@ -44,10 +50,22 @@ function handleLogout() {
       </form>
 
       <div class="flex justify-end">
-        <template v-if="$page.props.auth.user">
+        <template v-if="$page.props.auth.admin">
+          <ul class="flex w-full max-w-64 items-center justify-evenly">
+            <li>
+              <button type="button" class="text-white" @click.prevent="handleAdminLogout">
+                ログアウト
+              </button>
+            </li>
+            <li>
+              <Link :href="route('admin.index')" class="text-white">管理ページ</Link>
+            </li>
+          </ul>
+        </template>
+        <template v-else-if="$page.props.auth.user">
           <ul class="flex w-full max-w-72 items-center justify-between">
             <li>
-              <button type="button" class="text-white" @click.prevent="handleLogout">
+              <button type="button" class="text-white" @click.prevent="handleUserLogout">
                 ログアウト
               </button>
             </li>
