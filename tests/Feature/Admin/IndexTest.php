@@ -7,6 +7,7 @@ namespace Tests\Feature\Admin;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -33,6 +34,33 @@ final class IndexTest extends TestCase
         $response = $this->get(route('admin.index'));
 
         $response->assertStatus(200);
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Admin/Index')
+            ->has('users', fn (AssertableInertia $page) => $page
+                ->has('data', 1)
+                ->has('data.0', fn (AssertableInertia $page) => $page
+                    ->where('id', $this->user->id)
+                    ->etc()
+                )
+            )
+        );
+    }
+
+    #[Test]
+    public function 削除済みのユーザーは表示されない(): void
+    {
+        $this->user->markAsDeleted();
+
+        $this->actingAs($this->admin, 'admin');
+        $response = $this->get(route('admin.index'));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Admin/Index')
+            ->has('users', fn (AssertableInertia $page) => $page
+                ->has('data', 0)
+            )
+        );
     }
 
     #[Test]
@@ -41,7 +69,7 @@ final class IndexTest extends TestCase
         $this->actingAs($this->user);
         $response = $this->get(route('admin.index'));
 
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('admin.login'));
     }
 
     #[Test]
@@ -49,6 +77,6 @@ final class IndexTest extends TestCase
     {
         $response = $this->get(route('admin.index'));
 
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('admin.login'));
     }
 }

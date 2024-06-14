@@ -20,9 +20,23 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->redirectGuestsTo(function (Request $request) {
-            return $request->routeIs('admin.*') ? '/admin/login' : '/login';
+            if ($request->routeIs('admin.*')) {
+                return route('admin.login');
+            }
+
+            return route('login');
         });
-        $middleware->redirectUsersTo('/mypage');
+
+        $middleware->redirectUsersTo(function (Request $request) {
+            if ($request->user('web')) {
+                return route('dashboard');
+            }
+            if ($request->user('admin')) {
+                return route('admin.index');
+            }
+
+            return route('home.index');
+        });
 
         $middleware->validateCsrfTokens(except: [
             '/stripe/*',

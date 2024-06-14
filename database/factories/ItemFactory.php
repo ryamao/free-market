@@ -28,7 +28,7 @@ final class ItemFactory extends Factory
             'condition_id' => Condition::factory(),
             'name' => $name,
             'description' => Arr::join(Arr::wrap(fake()->sentences(fake()->numberBetween(1, 5))), PHP_EOL),
-            'price' => fake()->numberBetween(1, 100).'00',
+            'price' => fake()->numberBetween(2, 100).'00',
             'image_url' => 'https://via.placeholder.com/150?text='.urlencode(mb_substr($name, 0, 7).'...'),
         ];
     }
