@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DirectMailController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    Route::get('/users/{user}/direct-mails', [DirectMailController::class, 'create'])->name('direct-mails.create');
+    Route::post('/users/{user}/direct-mails', [DirectMailController::class, 'store'])->name('direct-mails.store');
 });
