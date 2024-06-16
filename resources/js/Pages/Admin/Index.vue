@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { Head, router } from '@inertiajs/vue3'
+import { Head, Link, router } from '@inertiajs/vue3'
 import axios from 'axios'
 
 import DangerButton from '@/Components/DangerButton.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
 import UserIcon from '@/Components/UserIcon.vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import { UserData } from '@/types'
@@ -13,10 +12,6 @@ defineProps<{
     data: UserData[]
   }
 }>()
-
-function sendEmail(user: UserData) {
-  alert(JSON.stringify(user))
-}
 
 async function deleteUser(user: UserData) {
   if (!confirm(`ユーザー「${user.name}」を削除します`)) {
@@ -38,7 +33,7 @@ async function deleteUser(user: UserData) {
   <AdminLayout>
     <section class="m-16">
       <h2 class="my-16 text-center text-2xl font-bold">登録ユーザー一覧</h2>
-      <ul class="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-12">
+      <ul class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-12">
         <li v-for="user in users.data" :key="user.id" class="rounded-lg shadow">
           <div class="m-4 space-y-6">
             <div class="flex items-center gap-x-6 p-2">
@@ -53,9 +48,12 @@ async function deleteUser(user: UserData) {
               <span v-else class="font-bold text-gray-300">名称未設定</span>
             </div>
             <div class="flex justify-between">
-              <SecondaryButton type="button" class="h-fit" @click.prevent="() => sendEmail(user)">
-                メール送信
-              </SecondaryButton>
+              <Link
+                :href="route('direct-mails.create', { user: user.id })"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25"
+              >
+                メール作成
+              </Link>
               <DangerButton type="button" class="h-fit" @click.prevent="() => deleteUser(user)">
                 削除
               </DangerButton>
