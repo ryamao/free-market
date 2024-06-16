@@ -39,4 +39,21 @@ final class EmailTest extends DuskTestCase
             $browser->visit($this->page);
         });
     }
+
+    #[Test]
+    public function メールを送信できる(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs($this->admin, 'admin');
+            $browser->visit($this->page);
+            $browser->type('@title-input', 'テストメール');
+            $browser->type('@content-input', 'テストメール本文');
+            $browser->press('メールを送信する');
+            $browser->waitForDialog();
+            $browser->acceptDialog();
+            $browser->waitForDialog();
+            $browser->acceptDialog();
+            $browser->waitForRoute('admin.index');
+        });
+    }
 }

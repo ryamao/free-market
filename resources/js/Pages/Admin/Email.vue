@@ -8,7 +8,7 @@ import TextInput from '@/Components/TextInput.vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import { UserData } from '@/types'
 
-defineProps<{
+const props = defineProps<{
   user: {
     data: UserData
   }
@@ -20,7 +20,16 @@ const form = useForm({
 })
 
 function sendDirectMail() {
-  alert(JSON.stringify(form))
+  if (!confirm('メールを送信しますか？')) {
+    return
+  }
+
+  form.post(route('direct-mails.store', { user: props.user.data.id }), {
+    onSuccess: () => {
+      alert('メールを送信しました')
+      form.reset()
+    }
+  })
 }
 </script>
 
@@ -57,6 +66,7 @@ function sendDirectMail() {
         <div>
           <InputLabel for="content" value="本文" />
           <textarea
+            id="content"
             v-model="form.content"
             class="w-full rounded-md border-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
             rows="10"

@@ -20,4 +20,5 @@ Route::middleware('auth:admin')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::get('/users/{user}/direct-mails', [DirectMailController::class, 'create'])->name('direct-mails.create');
+    Route::post('/users/{user}/direct-mails', [DirectMailController::class, 'store'])->name('direct-mails.store');
 });
