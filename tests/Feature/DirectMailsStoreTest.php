@@ -39,7 +39,7 @@ final class DirectMailsStoreTest extends TestCase
             'content' => '本文',
         ]);
 
-        $response->assertStatus(201);
+        $response->assertRedirectToRoute('admin.index');
         Mail::assertSent(DirectMail::class, function (DirectMail $mail) {
             return $mail->hasTo($this->user->email)
                 && $mail->hasSubject('タイトル');
