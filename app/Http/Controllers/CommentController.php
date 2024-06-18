@@ -8,6 +8,7 @@ use App\Actions\AddComment;
 use App\Actions\GetComments;
 use App\Http\Requests\CommentsStoreRequest;
 use App\Http\Resources\ItemResource;
+use App\Models\Comment;
 use App\Models\Item;
 use Inertia\Inertia;
 
@@ -28,6 +29,13 @@ final class CommentController extends Controller
         assert($request->user() instanceof \App\Models\User);
 
         $action($request->user(), $item, $request->content);
+
+        return response()->noContent();
+    }
+
+    public function destroy(Comment $comment): \Illuminate\Http\Response
+    {
+        $comment->delete();
 
         return response()->noContent();
     }
