@@ -48,6 +48,7 @@ final class LoginTest extends DuskTestCase
             $browser->type('@password-input', 'password');
             $browser->press('ログインする');
             $browser->waitForRoute('admin.index');
+            $browser->logout();
         });
     }
 
@@ -58,6 +59,19 @@ final class LoginTest extends DuskTestCase
             $browser->loginAs($this->admin, 'admin');
             $browser->visitRoute('admin.login');
             $browser->waitForRoute('admin.index');
+            $browser->logout();
+        });
+    }
+
+    #[Test]
+    public function ログインに失敗するとエラーメッセージが表示される(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit($this->page);
+            $browser->type('@email-input', $this->admin->email);
+            $browser->type('@password-input', 'invalid-password');
+            $browser->press('ログインする');
+            $browser->waitForText('認証に失敗しました。');
         });
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
@@ -20,7 +21,6 @@ use Laravel\Cashier\Billable;
  * @property string|null $building
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Support\Collection<\App\Models\Item> $items
  * @property-read \Illuminate\Support\Collection<\App\Models\Favorite> $favorites
  * @property-read \Illuminate\Support\Collection<\App\Models\Purchase> $purchases
@@ -28,7 +28,7 @@ use Laravel\Cashier\Billable;
  */
 final class User extends Authenticatable
 {
-    use Billable, HasFactory, Notifiable;
+    use Billable, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -44,7 +44,6 @@ final class User extends Authenticatable
         'prefecture',
         'address',
         'building',
-        'deleted_at',
     ];
 
     /**
@@ -68,16 +67,6 @@ final class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function markAsDeleted(): void
-    {
-        $this->update(['deleted_at' => now()]);
-    }
-
-    public function isDeleted(): bool
-    {
-        return $this->deleted_at !== null;
     }
 
     /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Item> */

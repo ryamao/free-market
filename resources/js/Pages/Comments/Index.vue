@@ -50,7 +50,11 @@ function onSendComment() {
               <li v-for="comment in comments.data" :key="comment.id">
                 <CommentCard
                   :comment="comment"
-                  :is-seller="comment.user.id === item.data.seller.id"
+                  :is-seller="
+                    comment.user !== null &&
+                    item.data.seller !== null &&
+                    comment.user.id === item.data.seller.id
+                  "
                 />
               </li>
             </ul>

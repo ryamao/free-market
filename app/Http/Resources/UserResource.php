@@ -23,7 +23,6 @@ final class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'image_url' => $this->image_url,
-            'is_deleted' => $this->isDeleted(),
         ];
     }
 }

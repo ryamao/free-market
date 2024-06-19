@@ -13,7 +13,6 @@ final class GetLatestItems
     {
         $items = Item::with(['seller', 'condition', 'categories', 'watchers', 'comments'])
             ->whereNull('sold_at')
-            ->whereHas('seller', fn ($query) => $query->whereNull('deleted_at'))
             ->orderByDesc('created_at')
             ->orderBy('name')
             ->paginate(10);

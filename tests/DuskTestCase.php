@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests;
 
 use Facebook\WebDriver\Chrome\ChromeOptions;
@@ -42,5 +44,14 @@ abstract class DuskTestCase extends BaseTestCase
                 ChromeOptions::CAPABILITY, $options
             )
         );
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        foreach (static::$browsers as $browser) {
+            $browser->driver->manage()->deleteAllCookies();
+        }
     }
 }

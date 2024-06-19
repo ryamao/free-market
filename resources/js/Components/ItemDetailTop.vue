@@ -11,7 +11,7 @@ const props = defineProps<{
   isAuthenticated: boolean
 }>()
 
-const endOfSale = computed(() => props.item.is_sold || props.item.seller.is_deleted)
+const endOfSale = computed(() => props.item.is_sold || !props.item.seller)
 </script>
 
 <template>

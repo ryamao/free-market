@@ -27,13 +27,13 @@ final class UsersDestroyTest extends TestCase
     }
 
     #[Test]
-    public function ユーザーを削除できる(): void
+    public function 管理者はユーザーを削除できる(): void
     {
         $this->actingAs($this->admin, 'admin');
         $response = $this->delete(route('users.destroy', $this->user));
 
         $response->assertStatus(204);
-        $this->assertTrue($this->user->fresh()?->isDeleted());
+        $this->assertSoftDeleted('users', ['id' => $this->user->id]);
     }
 
     #[Test]
@@ -43,17 +43,17 @@ final class UsersDestroyTest extends TestCase
         $response = $this->delete(route('users.destroy', $this->user));
 
         $response->assertRedirectToRoute('login');
-        $this->assertFalse($this->user->fresh()?->isDeleted());
+        $this->assertNotSoftDeleted('users', ['id' => $this->user->id]);
     }
 
     #[Test]
     public function 削除済みのユーザーは削除できない(): void
     {
-        $this->user->markAsDeleted();
+        $this->user->delete();
 
         $this->actingAs($this->admin, 'admin');
         $response = $this->delete(route('users.destroy', $this->user));
 
-        $response->assertStatus(409);
+        $response->assertNotFound();
     }
 }

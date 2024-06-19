@@ -16,11 +16,7 @@ final class UserController extends Controller
 
     public function destroy(User $user): \Illuminate\Http\Response
     {
-        if ($user->isDeleted()) {
-            return response(status: 409);
-        }
-
-        $user->markAsDeleted();
+        $user->delete();
 
         return response()->noContent();
     }
