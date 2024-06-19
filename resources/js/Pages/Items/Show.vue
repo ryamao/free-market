@@ -44,11 +44,7 @@ async function handleNextAction() {
         <div class="space-y-10">
           <div class="space-y-5">
             <ItemDetailTop :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
-            <template
-              v-if="
-                !item.data.seller.is_deleted && item.data.seller.id !== $page.props.auth.user?.id
-              "
-            >
+            <template v-if="item.data.seller && item.data.seller.id !== $page.props.auth.user?.id">
               <PurchaseLink
                 v-if="!item.data.is_sold"
                 :item="item.data"

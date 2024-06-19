@@ -13,7 +13,7 @@ export interface Profile {
 
 export interface Item {
   id: number
-  seller: UserData
+  seller: UserData | null
   name: string
   price: number
   image_url: string
@@ -29,7 +29,7 @@ export interface Item {
 
 export interface Comment {
   id: number
-  user: UserData
+  user: UserData | null
   content: string
   created_at: string
 }
