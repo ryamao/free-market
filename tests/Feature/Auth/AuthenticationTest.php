@@ -81,4 +81,18 @@ final class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirectToRoute('home.index');
     }
+
+    #[Test]
+    public function 削除済みユーザーはログインできない(): void
+    {
+        $this->user->delete();
+
+        $response = $this->fromRoute('login')->post(route('login'), [
+            'email' => $this->user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(['email' => '認証に失敗しました。']);
+    }
 }

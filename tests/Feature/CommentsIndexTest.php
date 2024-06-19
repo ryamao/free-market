@@ -35,9 +35,8 @@ final class CommentsIndexTest extends TestCase
     }
 
     #[Test]
-    public function ログインユーザーはコメント一覧を閲覧できる(): void
+    public function コメント一覧を取得できる(): void
     {
-        $this->actingAs($this->user);
         $response = $this->get(route('comments.index', $this->item));
 
         $response->assertOk();
@@ -59,6 +58,36 @@ final class CommentsIndexTest extends TestCase
                     ->where('content', 'コメント')
                     ->etc()
                 )
+                ->etc()
+            )
+        );
+    }
+
+    #[Test]
+    public function コメント一覧にユーザー情報が含まれている(): void
+    {
+        $response = $this->get(route('comments.index', $this->item));
+
+        $response->assertOk();
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('comments', fn (AssertableInertia $page) => $page
+                ->where('data.0.user.id', $this->user->id)
+                ->etc()
+            )
+        );
+    }
+
+    #[Test]
+    public function 削除済みユーザーのコメントにはユーザー情報が含まれない(): void
+    {
+        $this->user->delete();
+
+        $response = $this->get(route('comments.index', $this->item));
+
+        $response->assertOk();
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('comments', fn (AssertableInertia $page) => $page
+                ->where('data.0.user', null)
                 ->etc()
             )
         );

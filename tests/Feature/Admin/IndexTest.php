@@ -49,7 +49,7 @@ final class IndexTest extends TestCase
     #[Test]
     public function 削除済みのユーザーは表示されない(): void
     {
-        $this->user->markAsDeleted();
+        $this->user->delete();
 
         $this->actingAs($this->admin, 'admin');
         $response = $this->get(route('admin.index'));

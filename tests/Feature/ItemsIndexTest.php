@@ -163,4 +163,34 @@ final class ItemsIndexTest extends TestCase
             ->etc()
         );
     }
+
+    #[Test]
+    public function 商品に出品者が含まれている(): void
+    {
+        $seller = User::factory()->create();
+        $item = Item::factory()->for($seller, 'seller')->create();
+
+        $response = $this->getJson(route('items.index'));
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->where('data.0.id', $item->id)
+            ->where('data.0.seller.id', $seller->id)
+            ->where('data.0.seller.name', $seller->name)
+            ->etc()
+        );
+    }
+
+    #[Test]
+    public function 出品者が削除された場合は商品の出品者にnullが設定される(): void
+    {
+        $seller = User::factory()->create();
+        $item = Item::factory()->for($seller, 'seller')->create();
+        $seller->delete();
+
+        $response = $this->getJson(route('items.index'));
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->where('data.0.id', $item->id)
+            ->where('data.0.seller', null)
+            ->etc()
+        );
+    }
 }

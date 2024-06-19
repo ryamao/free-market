@@ -16,11 +16,13 @@ final class LoginTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
+    private User $user;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        User::create([
+        $this->user = User::create([
             'email' => 'test@example.com',
             'password' => Hash::make('password'),
         ]);
@@ -76,6 +78,20 @@ final class LoginTest extends DuskTestCase
             $browser->visit(new LoginPage())
                 ->click('@register-link')
                 ->waitForRoute('register');
+        });
+    }
+
+    #[Test]
+    public function 削除済みユーザーはログインできない(): void
+    {
+        $this->user->delete();
+
+        $this->browse(function (Browser $browser) {
+            $browser->visit(new LoginPage())
+                ->type('@email', $this->user->email)
+                ->type('@password', 'password')
+                ->press('@login-button')
+                ->waitForText('認証に失敗しました。');
         });
     }
 }
