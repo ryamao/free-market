@@ -55,7 +55,7 @@ final class AuthenticationTest extends TestCase
         ]);
 
         $this->assertGuest();
-        $response->assertSessionHasErrors([
+        $response->assertInvalid([
             'email' => 'Eメールは必須項目です。',
             'password' => 'パスワードは必須項目です。',
         ]);
@@ -70,7 +70,7 @@ final class AuthenticationTest extends TestCase
         ]);
 
         $this->assertGuest();
-        $response->assertSessionHasErrors(['email' => '認証に失敗しました。']);
+        $response->assertInvalid(['email' => '認証に失敗しました。']);
     }
 
     #[Test]
@@ -93,6 +93,20 @@ final class AuthenticationTest extends TestCase
         ]);
 
         $this->assertGuest();
-        $response->assertSessionHasErrors(['email' => '認証に失敗しました。']);
+        $response->assertInvalid(['email' => '認証に失敗しました。']);
+    }
+
+    #[Test]
+    public function レート制限に達した場合はログインできない(): void
+    {
+        for ($i = 0; $i < 6; $i++) {
+            $this->fromRoute('login');
+            $response = $this->post(route('login'), [
+                'email' => 'test@example.com',
+                'password' => 'wrong-password',
+            ]);
+        }
+
+        $response->assertInvalid('email');
     }
 }

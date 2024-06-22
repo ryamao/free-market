@@ -29,15 +29,39 @@ final class ProfileUpdateTest extends TestCase
     #[Test]
     public function プロフィールを更新できる(): void
     {
-        $response = $this->actingAs($this->user)
-            ->put(route('profile.update'), [
-                'name' => 'updated name',
-                'image' => UploadedFile::fake()->image('image.jpg'),
-                'postcode' => '1234567',
-                'prefecture' => 'updated prefecture',
-                'address' => 'updated address',
-                'building' => 'updated building name',
-            ]);
+        $this->actingAs($this->user);
+        $response = $this->put(route('profile.update'), [
+            'name' => 'updated name',
+            'image' => UploadedFile::fake()->image('image.jpg'),
+            'postcode' => '1234567',
+            'prefecture' => 'updated prefecture',
+            'address' => 'updated address',
+            'building' => 'updated building name',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+
+        $this->assertDatabaseHas('users', [
+            'id' => $this->user->id,
+            'name' => 'updated name',
+            'postcode' => '1234567',
+            'prefecture' => 'updated prefecture',
+            'address' => 'updated address',
+            'building' => 'updated building name',
+        ]);
+    }
+
+    #[Test]
+    public function 画像をアップロードしない場合でもプロフィールを更新できる(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->put(route('profile.update'), [
+            'name' => 'updated name',
+            'postcode' => '1234567',
+            'prefecture' => 'updated prefecture',
+            'address' => 'updated address',
+            'building' => 'updated building name',
+        ]);
 
         $response->assertRedirect(route('dashboard'));
 
