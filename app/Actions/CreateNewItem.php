@@ -34,7 +34,7 @@ final class CreateNewItem
     private function createCategories(Item $item, string $words): void
     {
         $names = preg_split('/\s+/', $words);
-        if (! is_array($names)) {
+        if (! $names) {
             return;
         }
 

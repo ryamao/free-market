@@ -193,4 +193,25 @@ final class ItemsIndexTest extends TestCase
             ->etc()
         );
     }
+
+    #[Test]
+    public function 検索文字列が指定されている場合(): void
+    {
+        $seller = User::factory()->create();
+        $item1 = Item::factory()->for($seller, 'seller')->create(['name' => 'Apple']);
+        $item2 = Item::factory()->for($seller, 'seller')->create(['name' => 'Banana']);
+
+        $response = $this->getJson(route('items.index', ['q' => 'Banana']));
+
+        $response->assertStatus(200);
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('data', 1)
+            ->has('data.0', fn (AssertableJson $json) => $json
+                ->where('id', $item2->id)
+                ->etc()
+            )
+            ->has('links')
+            ->has('meta')
+        );
+    }
 }
