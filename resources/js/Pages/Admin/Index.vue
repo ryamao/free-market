@@ -31,12 +31,13 @@ async function deleteUser(user: UserData) {
   <Head title="管理ページ" />
 
   <AdminLayout>
-    <section class="m-16">
-      <h2 class="my-16 text-center text-2xl font-bold">登録ユーザー一覧</h2>
-      <ul class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-12">
+    <section class="m-4 md:m-12">
+      <h2 class="my-4 text-center text-xl font-bold md:my-12">登録ユーザー一覧</h2>
+
+      <ul class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 md:gap-12">
         <li v-for="user in users.data" :key="user.id" class="rounded-lg shadow">
           <div class="m-4 space-y-6">
-            <div class="flex items-center gap-x-6 p-2">
+            <div class="grid grid-cols-[auto,1fr] items-center gap-x-6 p-2">
               <UserIcon
                 :user-id="user.id"
                 :user-name="user.name"

@@ -2,8 +2,11 @@
 import { Link, router, useForm } from '@inertiajs/vue3'
 import axios from 'axios'
 
+import Dropdown from '@/Components/Dropdown.vue'
+import DropdownLink from '@/Components/DropdownLink.vue'
 import TextInput from '@/Components/TextInput.vue'
 
+import IconUrl from '../../img/icon.svg?url'
 import LogoUrl from '../../img/logo.svg?url'
 
 const props = defineProps<{
@@ -33,14 +36,15 @@ function handleUserLogout() {
 
 <template>
   <header class="bg-black px-4 py-2">
-    <nav class="grid grid-cols-3 items-center justify-between">
+    <nav class="grid grid-cols-6 items-center justify-between md:grid-cols-3">
       <h1>
         <Link href="/">
-          <img :src="LogoUrl" alt="COACHTECH" class="h-6" />
+          <img :src="IconUrl" alt="COACHTECH" class="inline h-6 md:hidden" />
+          <img :src="LogoUrl" alt="COACHTECH" class="hidden h-6 md:inline" />
         </Link>
       </h1>
 
-      <form class="px-4" @submit.prevent="search">
+      <form class="col-span-4 md:col-span-1 md:mr-4" @submit.prevent="search">
         <TextInput
           v-model="form.q"
           type="search"
@@ -49,7 +53,7 @@ function handleUserLogout() {
         />
       </form>
 
-      <div class="flex justify-end">
+      <div class="hidden justify-end md:flex">
         <template v-if="$page.props.auth.admin">
           <ul class="flex w-full max-w-64 items-center justify-evenly">
             <li>
@@ -92,6 +96,43 @@ function handleUserLogout() {
             </li>
           </ul>
         </template>
+      </div>
+
+      <div class="flex items-center justify-end md:hidden">
+        <!-- Settings Dropdown -->
+        <div class="relative ms-3">
+          <Dropdown align="right" width="48">
+            <template #trigger>
+              <span class="inline-flex rounded-md">
+                <div
+                  class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-xl font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                >
+                  ≡
+                </div>
+              </span>
+            </template>
+
+            <template #content>
+              <template v-if="$page.props.auth.admin">
+                <DropdownLink :href="route('admin.index')">管理ページ</DropdownLink>
+                <DropdownLink :href="route('logout')" method="post" as="button">
+                  ログアウト
+                </DropdownLink>
+              </template>
+              <template v-else-if="$page.props.auth.user">
+                <DropdownLink :href="route('dashboard')">マイページ</DropdownLink>
+                <DropdownLink :href="route('sales.create')">出品</DropdownLink>
+                <DropdownLink :href="route('logout')" method="post" as="button">
+                  ログアウト
+                </DropdownLink>
+              </template>
+              <template v-else>
+                <DropdownLink :href="route('login')">ログイン</DropdownLink>
+                <DropdownLink :href="route('register')">会員登録</DropdownLink>
+              </template>
+            </template>
+          </Dropdown>
+        </div>
       </div>
     </nav>
   </header>

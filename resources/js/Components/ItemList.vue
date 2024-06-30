@@ -33,7 +33,7 @@ useIntersectionObserver(listBottomRef, ([{ isIntersecting }]) => {
 </script>
 
 <template>
-  <ul class="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-8">
+  <ul class="grid grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] md:gap-8">
     <li v-for="item in items" :key="item.id">
       <Link :href="route('items.show', { item: item })">
         <ItemCard :item="item" />
