@@ -25,11 +25,11 @@ const submit = () => {
   <Head title="ログイン" />
 
   <GuestLayout>
-    <section class="mx-auto max-w-lg">
-      <h2 class="my-16 text-center text-2xl font-bold">ログイン</h2>
+    <section class="mx-auto max-w-lg px-4">
+      <h2 class="my-6 text-center text-2xl font-bold md:my-16">ログイン</h2>
 
       <form novalidate @submit.prevent="submit">
-        <div class="*:h-32">
+        <div class="*:h-28 md:*:h-32">
           <div>
             <InputLabel for="email" value="メールアドレス" />
             <TextInput
@@ -58,7 +58,7 @@ const submit = () => {
           </div>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-4 md:mt-8">
           <PrimaryButton
             type="submit"
             class="w-full py-1.5"

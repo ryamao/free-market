@@ -140,10 +140,10 @@ const prefectures = [
   <Head title="プロフィール設定" />
 
   <SubPageLayout>
-    <section class="mx-auto max-w-screen-sm space-y-8 p-12">
+    <section class="mx-auto my-4 max-w-screen-sm px-4 md:my-8">
       <h2 class="text-center text-2xl font-bold">プロフィール設定</h2>
 
-      <div class="flex items-center gap-x-8">
+      <div class="mt-4 grid grid-cols-[auto,1fr] items-center gap-x-8 md:mt-8">
         <UserIcon
           :user-id="$page.props.auth.user.id"
           :user-name="form.name"
@@ -153,15 +153,15 @@ const prefectures = [
         />
         <button
           type="button"
-          class="inline-flex items-center justify-center rounded-md border-2 border-emerald-600 bg-white px-6 py-1.5 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
+          class="inline-flex w-fit items-center justify-center rounded-md border-2 border-emerald-600 bg-white px-6 py-1.5 text-base font-semibold uppercase tracking-widest text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-600 hover:text-white focus:bg-emerald-700 focus:text-white active:bg-emerald-800 active:text-white"
           @click="() => open()"
         >
           画像を選択する
         </button>
       </div>
 
-      <form class="space-y-16" @submit.prevent="submit">
-        <div class="space-y-8">
+      <form class="mt-8 space-y-8 md:space-y-16" @submit.prevent="submit">
+        <div class="space-y-4 md:space-y-8">
           <div>
             <InputLabel for="name" value="ユーザー名" />
             <TextInput

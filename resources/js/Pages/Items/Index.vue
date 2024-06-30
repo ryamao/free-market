@@ -26,8 +26,8 @@ function nextUrl(page: number): string {
   <Head title="商品一覧" />
 
   <CommonLayout :search-string="searchString">
-    <nav class="border-b border-black px-24 pb-1 pt-8">
-      <ul class="flex gap-16">
+    <nav class="border-b border-black pb-1 pt-2 md:px-24 md:pt-8">
+      <ul class="flex justify-evenly md:justify-normal md:gap-16">
         <li>
           <NavLink :href="route('home.index')" :active="routeName === 'home.index'">
             新着商品
@@ -46,7 +46,7 @@ function nextUrl(page: number): string {
       </ul>
     </nav>
 
-    <div class="p-12">
+    <div class="p-4 md:p-12">
       <ItemList :next-url="nextUrl" />
     </div>
   </CommonLayout>

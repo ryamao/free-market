@@ -99,7 +99,7 @@ onMounted(async () => {
   <Head :title="item.data.name" />
 
   <CommonLayout>
-    <div class="mx-auto my-16 grid max-w-screen-md space-y-8 px-8">
+    <div class="mx-auto my-4 grid max-w-screen-md space-y-8 px-4 md:my-16 md:px-8">
       <div class="flex gap-x-8">
         <div>
           <img :src="item.data.image_url" alt="" class="h-32" />

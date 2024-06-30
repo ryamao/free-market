@@ -37,8 +37,10 @@ function sendDirectMail() {
   <Head title="ダイレクトメール" />
 
   <AdminLayout>
-    <section class="mx-auto my-16 max-w-screen-sm">
-      <form novalidate class="space-y-8" @submit.prevent="sendDirectMail">
+    <section class="mx-auto my-4 max-w-screen-sm px-4 md:my-16">
+      <h2 class="my-4 text-center text-xl font-bold md:my-12">ダイレクトメール作成</h2>
+
+      <form novalidate class="space-y-4 md:space-y-8" @submit.prevent="sendDirectMail">
         <div>
           <InputLabel for="name" value="宛名" />
           <input
@@ -60,7 +62,7 @@ function sendDirectMail() {
             required
             autofocus
           />
-          <InputError class="mt-2" :message="form.errors.title" />
+          <InputError class="mt-1" :message="form.errors.title" />
         </div>
 
         <div>
@@ -71,7 +73,7 @@ function sendDirectMail() {
             class="w-full rounded-md border-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
             rows="10"
           />
-          <InputError class="mt-2" :message="form.errors.content" />
+          <InputError :message="form.errors.content" />
         </div>
 
         <PrimaryButton type="submit" class="w-full py-1.5">メールを送信する</PrimaryButton>

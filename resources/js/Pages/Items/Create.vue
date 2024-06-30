@@ -82,11 +82,11 @@ async function createNewItem() {
   <Head title="出品" />
 
   <SubPageLayout>
-    <section class="mx-auto my-8 max-w-screen-sm">
-      <h2 class="my-8 text-center text-2xl font-bold">商品の出品</h2>
+    <section class="mx-auto my-4 max-w-screen-sm px-4">
+      <h2 class="my-4 text-center text-2xl font-bold md:my-8">商品の出品</h2>
 
-      <form class="space-y-16" @submit.prevent="confirmItemCreation">
-        <div class="space-y-6">
+      <form class="space-y-8 md:space-y-16" @submit.prevent="confirmItemCreation">
+        <div class="space-y-4 md:space-y-6">
           <h3 class="border-b border-gray-400 pb-1 text-xl font-bold text-gray-500">商品の詳細</h3>
           <div>
             <InputLabel for="categories">カテゴリー</InputLabel>
@@ -116,7 +116,7 @@ async function createNewItem() {
           </div>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-4 md:space-y-6">
           <h3 class="border-b border-gray-400 pb-1 text-xl font-bold text-gray-500">
             商品名と説明
           </h3>
@@ -138,7 +138,7 @@ async function createNewItem() {
           </div>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-4 md:space-y-6">
           <h3 class="border-b border-gray-400 pb-1 text-xl font-bold text-gray-500">販売価格</h3>
           <div>
             <InputLabel for="price">販売価格</InputLabel>
@@ -161,7 +161,7 @@ async function createNewItem() {
           </div>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-4 md:space-y-6">
           <h3 class="border-b border-gray-400 pb-1 text-xl font-bold text-gray-500">商品画像</h3>
           <div>
             <div ref="dropZoneRef" class="relative aspect-square">
@@ -196,13 +196,13 @@ async function createNewItem() {
     <Modal :show="confirmingItemCreation" @close="closeModal">
       <section class="m-6">
         <h2 class="my-4 text-center text-xl font-bold">以下の商品を出品します</h2>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-4 md:grid md:grid-cols-2">
           <div>
             <img
               v-if="imagePreviewUrl"
               :src="imagePreviewUrl"
               alt=""
-              class="w-full object-contain"
+              class="aspect-[4/3] size-full object-contain"
             />
           </div>
           <div>

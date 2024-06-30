@@ -36,13 +36,13 @@ function onSendComment() {
   <Head title="コメント" />
 
   <CommonLayout>
-    <div class="mx-8 mb-8 mt-16">
-      <div class="mx-auto grid max-w-4xl grid-cols-2 gap-x-16">
-        <div>
+    <div class="m-4 md:mx-8 md:mt-16">
+      <div class="mx-auto max-w-4xl sm:grid sm:grid-cols-2 sm:gap-x-8 md:gap-x-16">
+        <div class="mx-auto max-w-96 sm:w-full">
           <img :src="item.data.image_url" :alt="item.data.name" class="w-full object-contain" />
         </div>
 
-        <div class="space-y-10">
+        <div class="mt-8 space-y-8 sm:mt-0">
           <ItemDetailTop :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
 
           <section>

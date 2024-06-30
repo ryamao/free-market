@@ -35,13 +35,13 @@ async function handleNextAction() {
   <Head :title="item.data.name" />
 
   <CommonLayout>
-    <div class="mx-8 mb-8 mt-16">
-      <div class="mx-auto grid max-w-4xl grid-cols-2 gap-x-16">
-        <div>
+    <div class="m-4 md:mx-8 md:mt-16">
+      <div class="mx-auto max-w-4xl sm:grid sm:grid-cols-2 sm:gap-x-8 md:gap-x-16">
+        <div class="mx-auto max-w-96 sm:w-full">
           <img :src="item.data.image_url" :alt="item.data.name" class="w-full object-contain" />
         </div>
 
-        <div class="space-y-10">
+        <div class="mt-10 space-y-10 sm:mt-0">
           <div class="space-y-5">
             <ItemDetailTop :item="item.data" :is-authenticated="$page.props.auth.user !== null" />
             <template v-if="item.data.seller && item.data.seller.id !== $page.props.auth.user?.id">
@@ -74,7 +74,7 @@ async function handleNextAction() {
           <section class="grid grid-cols-[auto,1fr] gap-x-8 gap-y-4">
             <h3 class="col-span-2 text-xl font-bold">商品の情報</h3>
             <h4 class="text-base font-bold">カテゴリー</h4>
-            <ul class="flex gap-x-4">
+            <ul class="flex flex-wrap gap-x-4 gap-y-2">
               <li v-for="category in props.item.data.categories" :key="category">
                 <Link
                   :href="route('home.search', { q: 'category:' + category })"
