@@ -64,5 +64,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/sell', [SaleController::class, 'store'])->name('sales.store');
 });
 
+// ユーザーページ
+
+Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+Route::get('/users/{user}/sales', [UserController::class, 'sales'])->name('users.sales');
+
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';

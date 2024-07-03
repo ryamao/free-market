@@ -96,7 +96,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Head :title="item.data.name" />
+  <Head :title="item.data.name + 'の購入'" />
 
   <CommonLayout>
     <div class="mx-auto my-4 grid max-w-screen-md space-y-8 px-4 md:my-16 md:px-8">

@@ -27,7 +27,7 @@ function deleteComment() {
     <div class="flex items-center" :class="{ 'flex-row-reverse': isSeller }">
       <Link
         v-if="comment.user"
-        href="#"
+        :href="route('users.show', { user: comment.user.id })"
         class="grid grid-cols-[auto,1fr] items-center gap-x-2 hover:opacity-75 focus:opacity-75"
         :class="{ 'grid-cols-[1fr,auto]': isSeller, 'grid-cols-[auto,1fr]': !isSeller }"
       >

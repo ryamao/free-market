@@ -37,7 +37,10 @@ async function deleteUser(user: UserData) {
       <ul class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 md:gap-12">
         <li v-for="user in users.data" :key="user.id" class="rounded-lg shadow">
           <div class="m-4 space-y-6">
-            <div class="grid grid-cols-[auto,1fr] items-center gap-x-6 p-2">
+            <Link
+              :href="route('users.show', { user: user.id })"
+              class="grid grid-cols-[auto,1fr] items-center gap-x-6 p-2"
+            >
               <UserIcon
                 :user-id="user.id"
                 :user-name="user.name"
@@ -47,7 +50,7 @@ async function deleteUser(user: UserData) {
               />
               <span v-if="user.name !== null" class="font-bold">{{ user.name }}</span>
               <span v-else class="font-bold text-gray-300">名称未設定</span>
-            </div>
+            </Link>
             <div class="flex justify-between">
               <Link
                 :href="route('direct-mails.create', { user: user.id })"
