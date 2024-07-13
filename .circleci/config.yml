@@ -80,7 +80,7 @@ jobs:
     docker:
       - image: arvindr226/alpine-ssh
     steps:
-      - run: ssh $SSH_USER@$SSH_HOST "cd /var/www/app && ./terraform/deploy.sh"
+      - run: ssh -v $SSH_USER@$SSH_HOST "/var/www/app/terraform/deploy.sh"
 workflows:
   build-and-test:
     jobs:
