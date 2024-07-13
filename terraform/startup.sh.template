@@ -1,0 +1,72 @@
+#!/bin/bash
+
+################################################################################
+#
+# nginx
+#
+################################################################################
+
+dnf update -y
+dnf install -y nginx
+
+cat << 'EOF' > /etc/nginx/nginx.conf
+${nginx_conf}
+EOF
+
+systemctl enable nginx
+systemctl start nginx
+
+################################################################################
+#
+# php
+#
+################################################################################
+
+dnf update -y
+dnf install -y php8.2 php8.2-fpm php8.2-zip php8.2-mysqlnd php8.2-bcmath php8.2-intl
+sed -i 's/^user = apache/user = nginx/' /etc/php-fpm.d/www.conf
+sed -i 's/^group = apache/group = nginx/' /etc/php-fpm.d/www.conf
+export HOME=/root
+cd /tmp
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+systemctl enable php-fpm
+systemctl start php-fpm
+
+################################################################################
+#
+# deploy
+#
+################################################################################
+
+dnf update -y
+dnf install -y git
+mkdir -p /var/www
+cd /var/www
+git clone https://github.com/ryamao/free-market.git app
+cd app
+
+cat << 'EOF' > .env
+${laravel_env}
+EOF
+
+echo "APP_URL=${app_url}" >> .env
+echo "DB_HOST=${db_host}" >> .env
+echo "DB_PASSWORD=\"$(aws secretsmanager get-secret-value --secret-id '${db_secret}' --query SecretString | jq -r . | jq -r .password)\"" >> .env
+echo "AWS_ACCESS_KEY_ID=\"${aws_access_key_id}\"" >> .env
+echo "AWS_SECRET_ACCESS_KEY=\"${aws_secret_access_key}\"" >> .env
+echo "AWS_BUCKET=\"${aws_bucket}\"" >> .env
+echo "STRIPE_KEY=\"${stripe_key}\"" >> .env
+echo "STRIPE_SECRET=\"${stripe_secret}\"" >> .env
+echo "STRIPE_WEBHOOK_SECRET=\"${stripe_webhook_secret}\"" >> .env
+
+composer install --prefer-dist --no-progress --no-interaction
+php artisan key:generate
+php artisan migrate --seed --force
+
+dnf update -y
+dnf install -y npm
+npm ci
+npm run build
+
+chown -R nginx:nginx /var/www/app
