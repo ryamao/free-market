@@ -76,7 +76,17 @@ jobs:
       - run:
           name: Run dusk tests
           command: php artisan dusk
+  deploy:
+    docker:
+      - image: arvindr226/alpine-ssh
+    steps:
+      - run: ssh $SSH_USER@$SSH_HOST "cd /var/www/app && ./terraform/deploy.sh"
 workflows:
   build-and-test:
     jobs:
       - test
+      - deploy:
+          requires: test
+          filters:
+            branches:
+              only: main
