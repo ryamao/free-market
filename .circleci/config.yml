@@ -77,10 +77,10 @@ jobs:
           name: Run dusk tests
           command: php artisan dusk
   deploy:
-    docker:
-      - image: arvindr226/alpine-ssh
+    machine:
+      enabled: true
     steps:
-      - run: ssh -v $SSH_USER@$SSH_HOST "/var/www/app/terraform/deploy.sh"
+      - run: ssh -v -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/var/www/app/terraform/deploy.sh"
 workflows:
   build-and-test:
     jobs:
