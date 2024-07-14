@@ -81,7 +81,7 @@ function handleClose() {
 }
 
 onMounted(async () => {
-  stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_KEY)
+  stripe.value = await loadStripe(`${import.meta.env.VITE_STRIPE_KEY}`)
   if (!stripe.value) {
     return
   }

@@ -67,6 +67,8 @@ resource "aws_lb_listener" "web" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.alb.arn
   }
+
+  depends_on = [aws_acm_certificate_validation.ap]
 }
 
 resource "aws_lb_listener" "redirect" {
