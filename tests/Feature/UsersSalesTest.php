@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Condition;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,11 +24,13 @@ final class UsersSalesTest extends TestCase
     {
         parent::setUp();
 
+        $condition = Condition::factory()->create();
+
         $this->user = User::factory()->create();
-        $this->item = Item::factory()->for($this->user, 'seller')->create();
+        $this->item = Item::factory()->for($this->user, 'seller')->for($condition)->create();
 
         $other = User::factory()->create();
-        Item::factory()->for($other, 'seller')->create();
+        Item::factory()->for($other, 'seller')->for($condition)->create();
     }
 
     #[Test]
