@@ -59,6 +59,7 @@ echo "AWS_BUCKET=\"${aws_bucket}\"" >> .env
 echo "STRIPE_KEY=\"${stripe_key}\"" >> .env
 echo "STRIPE_SECRET=\"${stripe_secret}\"" >> .env
 echo "STRIPE_WEBHOOK_SECRET=\"${stripe_webhook_secret}\"" >> .env
+echo "VITE_STRIPE_KEY=\"${stripe_key}\"" >> .env
 
 composer install --prefer-dist --no-progress --no-interaction
 php artisan key:generate
