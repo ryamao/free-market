@@ -16,8 +16,8 @@ function handleLogout() {
 </script>
 
 <template>
-  <header class="bg-black px-4 py-2.5">
-    <nav class="grid grid-cols-[auto,1fr] items-center justify-between">
+  <header class="bg-black px-4">
+    <nav class="grid h-14 grid-cols-[auto,1fr] items-center justify-between">
       <h1>
         <Link href="/">
           <img :src="IconUrl" alt="COACHTECH" class="inline h-6 md:hidden" />
