@@ -1,66 +1,235 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# フリマアプリ
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## アプリの概要
 
-## About Laravel
+このアプリは、プログラミングスクールの課題として作成してフリマアプリです。
+機能として検索、出品、購入、コメント、お気に入り登録などが可能です。
+バックエンドにLaravel、フロントエンドにVue.js、決済機能にStripeを使用しています。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![トップページ](documents/トップページ.png)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## デプロイ環境
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+現在、以下のURLからアクセス可能です。
 
-## Learning Laravel
+| ページ               | URL                                   |
+| -------------------- | ------------------------------------- |
+| 商品一覧ページ       | https://web-no-benkyo.com             |
+| 会員登録ページ       | https://web-no-benkyo.com/register    |
+| ログインページ       | https://web-no-benkyo.com/login       |
+| 管理者ログインページ | https://web-no-benkyo.com/admin/login |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+管理者ログインには以下のアカウントを使用してください。
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+| 項目           | 値                |
+| -------------- | ----------------- |
+| メールアドレス | admin@example.com |
+| パスワード     | password          |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 機能一覧
 
-## Laravel Sponsors
+- 会員認証
+  - 会員登録
+  - ログイン
+  - ログアウト
+- 商品情報
+  - 商品一覧取得
+  - 商品名検索
+  - 商品説明検索
+  - 商品状態検索
+  - 商品カテゴリ検索
+  - 商品詳細取得
+- 出品
+- 購入
+- お気に入り
+- コメント
+- 会員情報
+  - 会員情報取得
+  - プロフィール編集
+- 管理者認証
+  - ログイン
+  - ログアウト
+- 管理
+  - 会員削除
+  - メール送信
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 使用技術(実行環境)
 
-### Premium Partners
+- PHP 8.2
+- Laravel 11.x
+- Laravel Breeze 2.x
+- Laravel Cashier 15.x
+- Vue.js 3.x
+- Stripe.js 3.x
+- MySQL 8.0.x
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 設計書
 
-## Contributing
+- [テーブル設計](documents/table.md)
+- [ER図](documents/er-diagram.md)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ローカル環境構築
 
-## Code of Conduct
+このセクションでは、ローカル環境でアプリを実行する手順を説明します。
+実行するには Docker と Stripe CLI のインストールが必要です。
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. プロジェクトのリポジトリをクローンしてください。
 
-## Security Vulnerabilities
+```shell-session
+git clone https://github.com/ryamao/free-market.git
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. クローンしたリポジトリのディレクトリに移動します。
 
-## License
+```shell-session
+cd free-market
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. 環境設定ファイルを作成してください。
+
+```shell-session
+cp .env.example .env
+```
+
+環境設定ファイルの以下の項目に値を設定してください。
+
+| 変数名                | 説明                             |
+| --------------------- | -------------------------------- |
+| ADMIN_EMAIL           | 管理者アカウントのメールアドレス |
+| ADMIN_PASSWORD        | 管理者アカウントのパスワード     |
+| VITE_STRIPE_KEY       | Stripeの公開可能キー             |
+| STRIPE_KEY            | Stripeの公開可能キー             |
+| STRIPE_SECRET         | Stripeのシークレットキー         |
+| STRIPE_WEBHOOK_SECRET | Stripe Webhookのシークレットキー |
+
+4. プロジェクトの依存関係をインストールしてください。
+
+```shell-session
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest \
+    composer install --ignore-platform-reqs
+```
+
+5. Docker コンテナを起動して、アプリをセットアップしてください。
+
+```shell-session
+vendor/bin/sail up -d --build
+vendor/bin/sail artisan key:generate
+vendor/bin/sail artisan storage:link
+vendor/bin/sail artisan migrate --seed
+vendor/bin/sail npm ci
+```
+
+6. 新しいコンソールを開いて Vite を起動してください。
+
+```shell-session
+vendor/bin/sail npm run dev
+```
+
+7. Stripe にログインして Webhook イベントをモニタリングしてください。
+
+```shell-session
+stripe login
+stripe listen --forward-to localhost/stripe/webhook
+```
+
+8. ブラウザから http://localhost にアクセスして動作確認してください。
+   メール送信の確認は http://localhost:8025 で行ってください。
+
+## テスト手順
+
+このセクションでは、テストの実行手順を説明します。
+まず、[ローカル環境構築](#ローカル環境構築)を実施してブラウザからアプリにアクセスできることを確認してください。
+
+1. Vite を終了してください。
+
+2. フロントエンドをビルドしてください。
+
+```shell-session
+vendor/bin/sail npm run build
+```
+
+3. テスト用の環境設定ファイルを作成し、以下の変数を書き換えてください。
+
+```shell-session
+cp .env .env.testing
+```
+
+| 変数        | 変更後  |
+| ----------- | ------- |
+| APP_ENV     | testing |
+| DB_DATABASE | testing |
+| MAIL_MAILER | log     |
+
+4. E2Eテスト用の環境設定ファイルを作成し、以下の変数を書き換えてください。
+
+```shell-session
+cp .env .env.dusk.testing
+```
+
+| 変数        | 変更後              |
+| ----------- | ------------------- |
+| APP_ENV     | testing             |
+| APP_URL     | http://laravel.test |
+| DB_DATABASE | testing             |
+| MAIL_MAILER | log                 |
+
+5. テストを実行してください。
+
+以下のコマンドで機能テストを実行できます。
+
+```shell-session
+vendor/bin/sail test
+```
+
+以下のコマンドでE2Eテストを実行できます。
+
+```shell-session
+vendor/bin/sail dusk --env=testing
+```
+
+## デプロイ手順
+
+このセクションでは Terraform を使用して AWS 上に環境を構築する手順を説明します。
+実行するには Terraform CLI と AWS CLI のインストールが必要です。
+
+1. `terraform` ディレクトリに移動してください。
+
+```shell-session
+cd terraform
+```
+
+2. `terraform.tfvars` を以下の内容で作成してください。
+
+```terraform
+domain_name           = "アプリのドメイン名"
+aws_access_key_id     = "AWSのアクセスキーID"
+aws_secret_access_key = "AWSのシークレットアクセスキー"
+stripe_key            = "Stripeの公開可能キー"
+stripe_secret         = "Stripeのシークレットキー"
+stripe_webhook_secret = "Stripe Webhookのシークレットキー"
+```
+
+3. AWS にログインしてください。
+
+```shell-session
+aws sso login
+```
+
+4. Terraform を実行して AWS にリソースを作成してください。
+
+```shell-session
+terraform init
+terraform apply -auto-approve
+```
+
+5. `terraform.tfvars` に設定したドメインからアプリにアクセスしてください。
+
+6. 使い終わったらリソースを削除してください。
+
+```shell-session
+terraform destroy -auto-approve
+```
