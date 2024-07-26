@@ -3,7 +3,7 @@ import LogoUrl from '../../img/logo.svg?url'
 </script>
 
 <template>
-  <header class="bg-black p-4">
+  <header class="bg-black px-4">
     <h1 class="flex h-14 items-center">
       <img :src="LogoUrl" alt="COACHTECH" class="h-6" />
     </h1>
