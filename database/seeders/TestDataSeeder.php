@@ -37,8 +37,9 @@ final class TestDataSeeder extends Seeder
 
         $categories = Category::all();
         foreach ($items as $item) {
-            $item->categories()->attach($categories->random());
-            $item->categories()->attach($categories->random());
+            foreach ($categories->random(2) as $category) {
+                $item->categories()->attach($category);
+            }
         }
 
         foreach (Item::all() as $item) {
