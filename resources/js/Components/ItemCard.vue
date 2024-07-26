@@ -4,9 +4,11 @@ import { Item } from '@/types'
 import CommentIcon from './CommentIcon.vue'
 import FavoriteIcon from './FavoriteIcon.vue'
 
-defineProps<{
+const props = defineProps<{
   item?: Item
 }>()
+
+const outOfStock = props.item?.is_sold || props.item?.seller === null
 </script>
 
 <template>
@@ -24,8 +26,8 @@ defineProps<{
       >
         <h3 class="text-lg font-bold sm:col-span-2">{{ item.name }}</h3>
         <div class="space-x-2 text-base">
-          <span :class="{ 'line-through': item.is_sold }">¥{{ item.price.toLocaleString() }}</span>
-          <span v-if="item.is_sold" class="text-sm text-gray-500">(販売終了)</span>
+          <span :class="{ 'line-through': outOfStock }">¥{{ item.price.toLocaleString() }}</span>
+          <span v-if="outOfStock" class="text-sm text-gray-500">(販売終了)</span>
         </div>
         <div class="flex items-center gap-x-2 sm:justify-end">
           <div class="flex items-center gap-x-0.5">
