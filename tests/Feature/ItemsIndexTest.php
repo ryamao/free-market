@@ -180,7 +180,7 @@ final class ItemsIndexTest extends TestCase
     }
 
     #[Test]
-    public function 出品者が削除された場合は商品の出品者にnullが設定される(): void
+    public function 削除された出品者の商品は表示されない(): void
     {
         $seller = User::factory()->create();
         $item = Item::factory()->for($seller, 'seller')->create();
@@ -188,8 +188,7 @@ final class ItemsIndexTest extends TestCase
 
         $response = $this->getJson(route('items.index'));
         $response->assertJson(fn (AssertableJson $json) => $json
-            ->where('data.0.id', $item->id)
-            ->where('data.0.seller', null)
+            ->has('data', 0)
             ->etc()
         );
     }
