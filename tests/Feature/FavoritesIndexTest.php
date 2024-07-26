@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Condition;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,10 +27,12 @@ final class FavoritesIndexTest extends TestCase
         $this->user = User::factory()->create();
         $seller = User::factory()->create();
 
-        $this->item = Item::factory()->for($seller, 'seller')->create();
+        $condition = Condition::factory()->create();
+
+        $this->item = Item::factory()->for($seller, 'seller')->for($condition)->create();
         $this->user->favorites()->attach($this->item);
 
-        Item::factory()->for($seller, 'seller')->create();
+        Item::factory()->for($seller, 'seller')->for($condition)->create();
     }
 
     #[Test]
