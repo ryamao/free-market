@@ -14,7 +14,13 @@ const props = defineProps<{
 }>()
 
 function deleteComment() {
-  if (confirm('本当に削除しますか？')) {
+  const message = `以下のコメントを削除します
+
+投稿者: ${props.comment.user?.name}
+内容:
+${props.comment.content}`
+
+  if (confirm(message)) {
     axios.delete(route('comments.destroy', { comment: props.comment })).then(() => {
       router.reload()
     })
