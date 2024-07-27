@@ -15,9 +15,12 @@ final class AdminSeeder extends Seeder
      */
     public function run(): void
     {
+        /** @var string $password */
+        $password = config('app.admin.password');
+
         Admin::create([
-            'email' => 'admin@example.com',
-            'password' => Hash::make('zxcvbnmasdfghjklqwertyuiop'),
+            'email' => config('app.admin.email'),
+            'password' => Hash::make($password),
         ]);
     }
 }
