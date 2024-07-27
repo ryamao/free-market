@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Condition;
 use App\Models\Item;
 use App\Models\User;
 use Database\Seeders\TestDataSeeder;
@@ -197,8 +198,9 @@ final class ItemsIndexTest extends TestCase
     public function 検索文字列が指定されている場合(): void
     {
         $seller = User::factory()->create();
-        $item1 = Item::factory()->for($seller, 'seller')->create(['name' => 'Apple']);
-        $item2 = Item::factory()->for($seller, 'seller')->create(['name' => 'Banana']);
+        $condition = Condition::factory()->create();
+        $item1 = Item::factory()->for($seller, 'seller')->for($condition)->create(['name' => 'Apple']);
+        $item2 = Item::factory()->for($seller, 'seller')->for($condition)->create(['name' => 'Banana']);
 
         $response = $this->getJson(route('items.index', ['q' => 'Banana']));
 

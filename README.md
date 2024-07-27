@@ -8,23 +8,23 @@
 
 ![トップページ](documents/トップページ.png)
 
-## デプロイ環境
+## アプリケーションURL
 
-現在、以下のURLからアクセス可能です。
+- [トップページ](https://web-no-benkyo.com)
+- [会員登録ページ](https://web-no-benkyo.com/register)
+- [ログインページ](https://web-no-benkyo.com/login)
+- [管理者ログインページ](https://web-no-benkyo.com/admin/login)
 
-| ページ               | URL                                   |
-| -------------------- | ------------------------------------- |
-| 商品一覧ページ       | https://web-no-benkyo.com             |
-| 会員登録ページ       | https://web-no-benkyo.com/register    |
-| ログインページ       | https://web-no-benkyo.com/login       |
-| 管理者ログインページ | https://web-no-benkyo.com/admin/login |
-
-管理者ログインには以下のアカウントを使用してください。
+管理者ログインには以下の認証情報を使用してください。
 
 | 項目           | 値                |
 | -------------- | ----------------- |
 | メールアドレス | admin@example.com |
 | パスワード     | password          |
+
+## 関連URL
+
+- [CircleCIプロジェクト](https://app.circleci.com/pipelines/circleci/kG6BoGeV71NANFRbXtPJm/3f5Mw8GzTRxWBFAcdsnv6V)
 
 ## 機能一覧
 
